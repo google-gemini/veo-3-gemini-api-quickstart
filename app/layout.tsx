@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Manrope, Source_Code_Pro } from "next/font/google";
+import {
+  ClerkProvider,
+} from "@clerk/nextjs";
+import AuthWrapper from "@/components/AuthWrapper";
 
 import "./globals.css";
 
@@ -30,12 +34,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${manrope.variable} ${sourceCodePro.variable}`}>
-        <div className="bg-gray-200 text-stone-900">
-          <main>{children}</main>
-        </div>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${manrope.variable} ${sourceCodePro.variable}`}>
+          <AuthWrapper>
+            {children}
+          </AuthWrapper>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

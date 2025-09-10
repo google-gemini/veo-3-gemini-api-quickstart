@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.31.10",
     "@google/genai": "^1.8.0",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@wojtekmaj/react-hooks": "^2.0.0",
