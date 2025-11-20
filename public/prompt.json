@@ -1,0 +1,20 @@
+[
+    {
+        "id": "sample1",
+        "label": "Surreal Dreamscape",
+        "image": "/compositionsamples/sample1.png",
+        "prompt": "Seamlessly blend these images together into a cohesive scene. Make it look fantasy. Keep the composition minimalist and clean. Harmonize the lighting, shadows, and perspective across all elements."
+    },
+    {
+        "id": "sample2",
+        "label": "Cyberpunk City",
+        "image": "/compositionsamples/sample2.png",
+        "prompt": "Create an artistic collage of these images. Arrange in a grid layout. Make it look cinematic. Make the composition highly detailed and complex. Render the text 'NEON' clearly in the image in a stylish font."
+    },
+    {
+        "id": "sample3",
+        "label": "Vintage Poster",
+        "image": "/compositionsamples/sample3.png",
+        "prompt": "Apply the artistic style of the first image to the content of the other images. Make it look artistic. Maintain the exact appearance and identity of the character from the first image."
+    }
+]

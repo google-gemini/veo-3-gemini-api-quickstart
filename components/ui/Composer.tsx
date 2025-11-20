@@ -208,19 +208,18 @@ const Composer: React.FC<ComposerProps> = ({
             onClick={startGeneration}
             disabled={!canStart || isGenerating || geminiBusy}
             aria-busy={isGenerating || geminiBusy}
-            className={`h-10 w-10 flex items-center justify-center rounded-full text-white transition ${
-              !canStart || isGenerating || geminiBusy
-                ? "bg-white/50 cursor-not-allowed"
-                : "bg-white/50 hover:bg-white/70 cursor-pointer"
-            }`}
+            className={`h-10 w-10 flex items-center justify-center rounded-full text-white transition ${!canStart || isGenerating || geminiBusy
+              ? "bg-white/50 cursor-not-allowed"
+              : "bg-white/50 hover:bg-white/70 cursor-pointer"
+              }`}
             title={
               mode === "create-image"
                 ? "Generate Image"
                 : mode === "edit-image"
-                ? "Edit Image"
-                : mode === "compose-image"
-                ? "Compose Image"
-                : "Generate Video"
+                  ? "Edit Image"
+                  : mode === "compose-image"
+                    ? "Compose Image"
+                    : "Generate Video"
             }
           >
             {isGenerating || geminiBusy ? (
@@ -240,13 +239,12 @@ const Composer: React.FC<ComposerProps> = ({
                   !isTabDisabled("create-image") && setMode("create-image")
                 }
                 disabled={isTabDisabled("create-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${
-                  mode === "create-image"
-                    ? "bg-indigo-400/30 text-slate-900 backdrop-blur-sm"
-                    : isTabDisabled("create-image")
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "create-image"
+                  ? "bg-indigo-400/30 text-slate-900 backdrop-blur-sm"
+                  : isTabDisabled("create-image")
                     ? "text-slate-400 cursor-not-allowed opacity-50"
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <Image className="w-4 h-4" aria-hidden="true" />
                 {getTabText("create-image")}
@@ -265,13 +263,12 @@ const Composer: React.FC<ComposerProps> = ({
                   !isTabDisabled("edit-image") && setMode("edit-image")
                 }
                 disabled={isTabDisabled("edit-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${
-                  mode === "edit-image"
-                    ? "bg-blue-400/30 text-slate-900 backdrop-blur-sm"
-                    : isTabDisabled("edit-image")
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "edit-image"
+                  ? "bg-blue-400/30 text-slate-900 backdrop-blur-sm"
+                  : isTabDisabled("edit-image")
                     ? "text-slate-400 cursor-not-allowed opacity-50"
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <Edit className="w-4 h-4" />
                 {getTabText("edit-image")}
@@ -290,13 +287,12 @@ const Composer: React.FC<ComposerProps> = ({
                   !isTabDisabled("compose-image") && setMode("compose-image")
                 }
                 disabled={isTabDisabled("compose-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${
-                  mode === "compose-image"
-                    ? "bg-green-400/30 text-slate-900 backdrop-blur-sm"
-                    : isTabDisabled("compose-image")
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "compose-image"
+                  ? "bg-green-400/30 text-slate-900 backdrop-blur-sm"
+                  : isTabDisabled("compose-image")
                     ? "text-slate-400 cursor-not-allowed opacity-50"
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <Palette className="w-4 h-4" />
                 {getTabText("compose-image")}
@@ -315,13 +311,12 @@ const Composer: React.FC<ComposerProps> = ({
                   !isTabDisabled("create-video") && setMode("create-video")
                 }
                 disabled={isTabDisabled("create-video")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${
-                  mode === "create-video"
-                    ? "bg-purple-400/30 text-slate-900 backdrop-blur-sm"
-                    : isTabDisabled("create-video")
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "create-video"
+                  ? "bg-purple-400/30 text-slate-900 backdrop-blur-sm"
+                  : isTabDisabled("create-video")
                     ? "text-slate-400 cursor-not-allowed opacity-50"
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <Video className="w-4 h-4" />
                 {getTabText("create-video")}
