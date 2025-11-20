@@ -8,13 +8,13 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon } from "lucide-react";
-import Composer from "@/components/ui/Composer";
+import { Upload, Film, Image as ImageIcon, Maximize2 } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
+import AlbumComposerControls from "@/components/ui/AlbumComposerControls";
 import { ImagePreviewProvider, useImagePreview } from "@/context/ImagePreviewContext";
-import { Maximize2 } from "lucide-react";
+import Composer from "@/components/ui/Composer"; // Keeping this if it's needed for the sidebar wrapper, though the JSX seems to use specific controls.
 
 type VeoOperationName = string | null;
 
@@ -22,9 +22,30 @@ type StudioMode =
   | "create-image"
   | "edit-image"
   | "compose-image"
+  | "compose-album"
   | "create-video";
 
 const POLL_INTERVAL_MS = 5000;
+
+interface AlbumItem {
+  id: string;
+  label: string;
+  image: string;
+  prompt: string;
+}
+
+interface HistoryItem {
+  id: string;
+  imageUrl: string;
+  timestamp: number;
+  folderId: string | null;
+}
+
+interface Folder {
+  id: string;
+  name: string;
+  color: string;
+}
 
 const VeoStudioContent: React.FC = () => {
   const { openPreview } = useImagePreview();
@@ -33,22 +54,6 @@ const VeoStudioContent: React.FC = () => {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [selectedModel, setSelectedModel] = useState("veo-3.0-generate-001");
-
-  // Update selected model when mode changes
-  useEffect(() => {
-    if (mode === "create-video") {
-      setSelectedModel("veo-3.0-generate-001");
-    } else if (mode === "edit-image" || mode === "compose-image") {
-      setSelectedModel("gemini-2.5-flash-image-preview");
-    } else if (mode === "create-image") {
-      if (
-        !selectedModel.includes("gemini") &&
-        !selectedModel.includes("imagen")
-      ) {
-        setSelectedModel("gemini-2.5-flash-image-preview");
-      }
-    }
-  }, [mode, selectedModel]);
 
   // Image generation prompts
   const [imagePrompt, setImagePrompt] = useState("");
@@ -62,20 +67,14 @@ const VeoStudioContent: React.FC = () => {
   const [geminiBusy, setGeminiBusy] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null); // data URL
 
-  // History with folder organization
-  type HistoryItem = {
-    id: string;
-    imageUrl: string;
-    timestamp: number;
-    folderId: string | null;
-  };
+  // Album mode state
+  const [albumItems, setAlbumItems] = useState<AlbumItem[]>([]);
+  const [albumThemeImage, setAlbumThemeImage] = useState<string>("");
+  const [albumSourceImage, setAlbumSourceImage] = useState<File | null>(null);
+  const [albumImages, setAlbumImages] = useState<string[]>([]);
+  const [isGeneratingAlbum, setIsGeneratingAlbum] = useState(false);
 
-  type Folder = {
-    id: string;
-    name: string;
-    color: string;
-  };
-
+  // History and Folders state
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [folders, setFolders] = useState<Folder[]>([
     { id: 'default', name: 'All Images', color: 'blue' }
@@ -83,6 +82,31 @@ const VeoStudioContent: React.FC = () => {
   const [selectedFolder, setSelectedFolder] = useState<string>('default');
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+
+  const [operationName, setOperationName] = useState<VeoOperationName>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const videoBlobRef = useRef<Blob | null>(null);
+  const trimmedBlobRef = useRef<Blob | null>(null);
+
+  const trimmedUrlRef = useRef<string | null>(null);
+  const originalVideoUrlRef = useRef<string | null>(null);
+
+  // Update selected model when mode changes
+  useEffect(() => {
+    if (mode === "create-video") {
+      setSelectedModel("veo-3.0-generate-001");
+    } else if (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") {
+      setSelectedModel("gemini-2.5-flash-image-preview");
+    } else if (mode === "create-image") {
+      if (
+        !selectedModel.includes("gemini") &&
+        !selectedModel.includes("imagen")
+      ) {
+        setSelectedModel("gemini-2.5-flash-image-preview");
+      }
+    }
+  }, [mode, selectedModel]);
 
   // Debug multipleImageFiles state
   useEffect(() => {
@@ -108,15 +132,6 @@ const VeoStudioContent: React.FC = () => {
       }
     };
   }, [imageFile]);
-
-  const [operationName, setOperationName] = useState<VeoOperationName>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const videoBlobRef = useRef<Blob | null>(null);
-  const trimmedBlobRef = useRef<Blob | null>(null);
-
-  const trimmedUrlRef = useRef<string | null>(null);
-  const originalVideoUrlRef = useRef<string | null>(null);
 
   // Friendly model label for UI
   const modelLabel = useMemo(() => {
@@ -175,8 +190,8 @@ const VeoStudioContent: React.FC = () => {
 
   // Single flag for whether we are actively generating
   const isLoadingUI = useMemo(
-    () => isGenerating || imagenBusy || geminiBusy,
-    [isGenerating, imagenBusy, geminiBusy]
+    () => isGenerating || imagenBusy || geminiBusy || isGeneratingAlbum,
+    [isGenerating, imagenBusy, geminiBusy, isGeneratingAlbum]
   );
 
   // Advance loading message while any generation is happening
@@ -194,14 +209,12 @@ const VeoStudioContent: React.FC = () => {
   const canStart = useMemo(() => {
     if (mode === "create-video") {
       if (!prompt.trim()) return false;
-      // For create-video, image is optional (can be text-to-video or image-to-video)
       return true;
     } else if (mode === "create-image") {
       return imagePrompt.trim() && !imagenBusy && !geminiBusy;
     } else if (mode === "edit-image") {
       return editPrompt.trim() && (imageFile || generatedImage) && !geminiBusy;
     } else if (mode === "compose-image") {
-      // Allow composition with existing image + new images, or just new images
       const hasExistingImage = imageFile || generatedImage;
       const hasNewImages = multipleImageFiles.length > 0;
       return (
@@ -209,6 +222,8 @@ const VeoStudioContent: React.FC = () => {
         (hasExistingImage || hasNewImages) &&
         !geminiBusy
       );
+    } else if (mode === "compose-album") {
+      return albumThemeImage && albumItems.length > 0 && !!albumSourceImage && !isGeneratingAlbum;
     }
     return false;
   }, [
@@ -222,6 +237,10 @@ const VeoStudioContent: React.FC = () => {
     multipleImageFiles,
     imagenBusy,
     geminiBusy,
+    albumThemeImage,
+    albumItems,
+    albumSourceImage,
+    isGeneratingAlbum
   ]);
 
   const resetAll = () => {
@@ -239,6 +258,11 @@ const VeoStudioContent: React.FC = () => {
     setVideoUrl(null);
     setImagenBusy(false);
     setGeminiBusy(false);
+    setAlbumItems([]);
+    setAlbumThemeImage("");
+    setAlbumSourceImage(null);
+    setAlbumImages([]);
+    setIsGeneratingAlbum(false);
     if (videoBlobRef.current) {
       URL.revokeObjectURL(URL.createObjectURL(videoBlobRef.current));
       videoBlobRef.current = null;
@@ -283,7 +307,7 @@ const VeoStudioContent: React.FC = () => {
         console.error("Imagen API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error in generateWithImagen:", e);
       alert(`Failed to generate image: ${e.message}`);
     } finally {
@@ -325,9 +349,8 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error in generateWithGemini:", e);
-      // Show user-friendly error message
       alert(`Failed to generate image: ${e.message}`);
     } finally {
       console.log("Resetting Gemini busy state");
@@ -379,7 +402,7 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini edit API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error in editWithGemini:", e);
       alert(`Failed to edit image: ${e.message}`);
     } finally {
@@ -396,16 +419,13 @@ const VeoStudioContent: React.FC = () => {
       const form = new FormData();
       form.append("prompt", composePrompt);
 
-      // Add newly uploaded images first
       for (const file of multipleImageFiles) {
         form.append("imageFiles", file);
       }
 
-      // Include existing image last (if any)
       if (imageFile) {
         form.append("imageFiles", imageFile);
       } else if (generatedImage) {
-        // Convert base64 to blob and add as file
         const [meta, b64] = generatedImage.split(",");
         const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
         const byteCharacters = atob(b64);
@@ -415,8 +435,6 @@ const VeoStudioContent: React.FC = () => {
         }
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: mime });
-
-        // Create a File object from the blob
         const existingImageFile = new File([blob], "existing-image.png", {
           type: mime,
         });
@@ -429,11 +447,7 @@ const VeoStudioContent: React.FC = () => {
       });
 
       if (!resp.ok) {
-        console.error(
-          "Gemini compose API error:",
-          resp.status,
-          resp.statusText
-        );
+        console.error("Gemini compose API error:", resp.status, resp.statusText);
         throw new Error(`API error: ${resp.status}`);
       }
 
@@ -453,7 +467,7 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini compose API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error in composeWithGemini:", e);
       alert(`Failed to compose images: ${e.message}`);
     } finally {
@@ -462,7 +476,45 @@ const VeoStudioContent: React.FC = () => {
     }
   }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedFolder]);
 
-  // Start generation based on current mode
+  const generateAlbum = useCallback(async () => {
+    if (!albumSourceImage || albumItems.length === 0) return;
+
+    setIsGeneratingAlbum(true);
+    setAlbumImages([]);
+
+    for (const item of albumItems) {
+      if (!item.prompt.trim()) continue;
+
+      try {
+        const form = new FormData();
+        form.append("prompt", item.prompt);
+        form.append("imageFiles", albumSourceImage);
+
+        const resp = await fetch("/api/gemini/edit", {
+          method: "POST",
+          body: form,
+        });
+
+        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+
+        const json = await resp.json();
+        if (json?.image?.imageBytes) {
+          const dataUrl = `data:${json.image.mimeType};base64,${json.image.imageBytes}`;
+          setAlbumImages(prev => [...prev, dataUrl]);
+          setHistory((prev) => [{
+            id: Date.now().toString(),
+            imageUrl: dataUrl,
+            timestamp: Date.now(),
+            folderId: selectedFolder === 'default' ? null : selectedFolder
+          }, ...prev]);
+        }
+      } catch (e) {
+        console.error("Error generating album image", e);
+      }
+    }
+    setIsGeneratingAlbum(false);
+  }, [albumItems, albumSourceImage, selectedFolder]);
+
   const startGeneration = useCallback(async () => {
     if (!canStart) return;
 
@@ -481,8 +533,7 @@ const VeoStudioContent: React.FC = () => {
           form.append("imageFile", imageFile);
         } else if (generatedImage) {
           const [meta, b64] = generatedImage.split(",");
-          const mime =
-            meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
+          const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
           form.append("imageBase64", b64);
           form.append("imageMimeType", mime);
         }
@@ -500,7 +551,6 @@ const VeoStudioContent: React.FC = () => {
         setIsGenerating(false);
       }
     } else if (mode === "create-image") {
-      // Use selected model (Imagen or Gemini)
       if (selectedModel.includes("imagen")) {
         await generateWithImagen();
       } else {
@@ -510,6 +560,8 @@ const VeoStudioContent: React.FC = () => {
       await editWithGemini();
     } else if (mode === "compose-image") {
       await composeWithGemini();
+    } else if (mode === "compose-album") {
+      await generateAlbum();
     }
   }, [
     canStart,
@@ -524,6 +576,7 @@ const VeoStudioContent: React.FC = () => {
     generateWithGemini,
     editWithGemini,
     composeWithGemini,
+    generateAlbum
   ]);
 
   // Poll operation until done then download
@@ -701,7 +754,15 @@ const VeoStudioContent: React.FC = () => {
       onDrop={handleDrop}
     >
       {/* Main content area */}
-      <div className="flex flex-col items-center justify-center min-h-screen pb-96 px-4">
+      <div
+        className={`flex flex-col items-center justify-center min-h-screen pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
+          } ${(mode === "edit-image" ||
+            mode === "compose-image" ||
+            mode === "compose-album")
+            ? "pr-96"
+            : ""
+          }`}
+      >
         {!videoUrl &&
           (isLoadingUI ? (
             <div className="w-full max-w-3xl">
@@ -784,6 +845,7 @@ const VeoStudioContent: React.FC = () => {
               {!(
                 mode === "edit-image" ||
                 mode === "compose-image" ||
+                mode === "compose-album" ||
                 mode === "create-video"
               ) && (
                   <div className="text-stone-400 select-none text-center w-full">
@@ -886,6 +948,44 @@ const VeoStudioContent: React.FC = () => {
             </div>
           ))}
 
+        {/* Album Grid */}
+        {mode === "compose-album" && (
+          <div className="w-full max-w-6xl mt-8 pb-32">
+            {albumImages.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {albumImages.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className="aspect-square relative rounded-lg overflow-hidden border border-white/20 group cursor-pointer"
+                    onClick={() => openPreview(img)}
+                  >
+                    <Image
+                      src={img}
+                      alt={`Album image ${idx}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <Maximize2 className="w-6 h-6 text-white drop-shadow-lg" />
+                    </div>
+                  </div>
+                ))}
+                {isGeneratingAlbum && (
+                  <div className="aspect-square rounded-lg border border-white/20 bg-white/5 flex items-center justify-center animate-pulse">
+                    <div className="text-xs text-slate-500">Generating...</div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              !isGeneratingAlbum && (
+                <div className="text-center text-slate-500 mt-20">
+                  Select a theme and add prompts to generate an album.
+                </div>
+              )
+            )}
+          </div>
+        )}
+
         {generatedImage &&
           !videoUrl &&
           !(mode === "create-video" && isLoadingUI) && (
@@ -908,160 +1008,192 @@ const VeoStudioContent: React.FC = () => {
       </div>
 
       {/* Left side history */}
-      {history.length > 0 && (
-        <div className="fixed left-6 top-24 bottom-32 z-20 w-48 overflow-hidden flex flex-col pointer-events-none">
-          <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
-            {/* Folder tabs */}
-            <div className="flex flex-col gap-1 mb-2">
-              {folders.map((folder) => {
-                const folderItems = folder.id === 'default'
-                  ? history
-                  : history.filter(item => item.folderId === folder.id);
-                return (
-                  <button
-                    key={folder.id}
-                    onClick={() => setSelectedFolder(folder.id)}
-                    className={`px-2 py-1 text-xs rounded transition-colors text-left ${selectedFolder === folder.id
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-                      }`}
-                  >
-                    {folder.name} ({folderItems.length})
-                  </button>
-                );
-              })}
-              <button
-                onClick={() => setIsCreatingFolder(true)}
-                className="px-2 py-1 text-xs rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-              >
-                + New Folder
-              </button>
-            </div>
-
-            {/* New folder input */}
-            {isCreatingFolder && (
-              <div className="flex gap-1 mb-2">
-                <input
-                  type="text"
-                  value={newFolderName}
-                  onChange={(e) => setNewFolderName(e.target.value)}
-                  placeholder="Folder name"
-                  className="flex-1 px-2 py-1 text-xs border rounded dark:bg-slate-800 dark:border-slate-600"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newFolderName.trim()) {
-                      setFolders(prev => [...prev, {
-                        id: Date.now().toString(),
-                        name: newFolderName,
-                        color: 'blue'
-                      }]);
-                      setNewFolderName('');
-                      setIsCreatingFolder(false);
-                    } else if (e.key === 'Escape') {
-                      setNewFolderName('');
-                      setIsCreatingFolder(false);
-                    }
-                  }}
-                  autoFocus
-                />
-              </div>
-            )}
-
-            {/* History items */}
-            <div className="text-xs font-medium text-slate-500 dark:text-slate-400 text-center mb-1 uppercase tracking-wider">
-              History
-            </div>
-            {history
-              .filter(item => selectedFolder === 'default' || item.folderId === selectedFolder)
-              .map((item) => (
-                <div
-                  key={item.id}
-                  className="w-full aspect-square relative shrink-0 cursor-pointer border-2 border-white/20 hover:border-white/80 rounded-lg overflow-hidden transition-all shadow-sm hover:shadow-md group"
-                  onClick={() => setGeneratedImage(item.imageUrl)}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    // Show folder assignment menu
-                    const targetFolder = prompt('Move to folder (enter folder name):');
-                    if (targetFolder) {
-                      const folder = folders.find(f => f.name.toLowerCase() === targetFolder.toLowerCase());
-                      if (folder) {
-                        setHistory(prev => prev.map(h =>
-                          h.id === item.id ? { ...h, folderId: folder.id === 'default' ? null : folder.id } : h
-                        ));
-                      }
-                    }
-                  }}
+      {
+        history.length > 0 && (
+          <div className="fixed left-6 top-24 bottom-32 z-20 w-48 overflow-hidden flex flex-col pointer-events-none">
+            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+              {/* Folder tabs */}
+              <div className="flex flex-col gap-1 mb-2">
+                {folders.map((folder) => {
+                  const folderItems = folder.id === 'default'
+                    ? history
+                    : history.filter(item => item.folderId === folder.id);
+                  return (
+                    <button
+                      key={folder.id}
+                      onClick={() => setSelectedFolder(folder.id)}
+                      className={`px-2 py-1 text-xs rounded transition-colors text-left ${selectedFolder === folder.id
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                        }`}
+                    >
+                      {folder.name} ({folderItems.length})
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() => setIsCreatingFolder(true)}
+                  className="px-2 py-1 text-xs rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
                 >
-                  <Image
-                    src={item.imageUrl}
-                    alt={`History ${item.id}`}
-                    fill
-                    className="object-cover"
+                  + New Folder
+                </button>
+              </div>
+
+              {/* New folder input */}
+              {isCreatingFolder && (
+                <div className="flex gap-1 mb-2">
+                  <input
+                    type="text"
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="Folder name"
+                    className="flex-1 px-2 py-1 text-xs border rounded dark:bg-slate-800 dark:border-slate-600"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newFolderName.trim()) {
+                        setFolders(prev => [...prev, {
+                          id: Date.now().toString(),
+                          name: newFolderName,
+                          color: 'blue'
+                        }]);
+                        setNewFolderName('');
+                        setIsCreatingFolder(false);
+                      } else if (e.key === 'Escape') {
+                        setNewFolderName('');
+                        setIsCreatingFolder(false);
+                      }
+                    }}
+                    autoFocus
                   />
-                  {generatedImage === item.imageUrl && (
-                    <div className="absolute inset-0 ring-2 ring-inset ring-blue-500 rounded-lg" />
-                  )}
                 </div>
-              ))}
+              )}
+
+              {/* History items */}
+              <div className="text-xs font-medium text-slate-500 dark:text-slate-400 text-center mb-1 uppercase tracking-wider">
+                History
+              </div>
+              {history
+                .filter(item => selectedFolder === 'default' || item.folderId === selectedFolder)
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    className="w-full aspect-square relative shrink-0 cursor-pointer border-2 border-white/20 hover:border-white/80 rounded-lg overflow-hidden transition-all shadow-sm hover:shadow-md group"
+                    onClick={() => setGeneratedImage(item.imageUrl)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      // Show folder assignment menu
+                      const targetFolder = window.prompt('Move to folder (enter folder name):');
+                      if (targetFolder) {
+                        const folder = folders.find(f => f.name.toLowerCase() === targetFolder.toLowerCase());
+                        if (folder) {
+                          setHistory(prev => prev.map(h =>
+                            h.id === item.id ? { ...h, folderId: folder.id === 'default' ? null : folder.id } : h
+                          ));
+                        }
+                      }
+                    }}
+                  >
+                    <Image
+                      src={item.imageUrl}
+                      alt={`History ${item.id}`}
+                      fill
+                      className="object-cover"
+                    />
+                    {generatedImage === item.imageUrl && (
+                      <div className="absolute inset-0 ring-2 ring-inset ring-blue-500 rounded-lg" />
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Right side controls */}
-      {(mode === "edit-image" || mode === "compose-image") && (
-        <div className="fixed right-6 top-24 bottom-32 z-20 w-80 overflow-hidden flex flex-col pointer-events-none">
-          <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar">
-            {mode === "edit-image" && (
-              <PhotoEditorControls onPromptChange={setEditPrompt} />
-            )}
-            {mode === "compose-image" && (
-              <ImageComposerControls onPromptChange={setComposePrompt} />
-            )}
+      {
+        (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") && (
+          <div className="fixed right-6 top-24 bottom-32 z-20 w-80 overflow-hidden flex flex-col pointer-events-none">
+            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar">
+              {mode === "edit-image" && (
+                <PhotoEditorControls
+                  onPromptChange={setEditPrompt}
+                  onGenerate={startGeneration}
+                  isGenerating={isLoadingUI}
+                  canGenerate={canStart}
+                />
+              )}
+              {mode === "compose-image" && (
+                <ImageComposerControls
+                  onPromptChange={setComposePrompt}
+                  onGenerate={startGeneration}
+                  isGenerating={isLoadingUI}
+                  canGenerate={canStart}
+                />
+              )}
+              {mode === "compose-album" && (
+                <AlbumComposerControls
+                  onAlbumItemsChange={setAlbumItems}
+                  onThemeSelect={setAlbumThemeImage}
+                  onSourceImageChange={setAlbumSourceImage}
+                  onGenerate={startGeneration}
+                  isGenerating={isGeneratingAlbum}
+                />
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
-      {videoUrl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-8">
-          <div className="relative w-full max-w-6xl">
-            <button
-              onClick={() => setVideoUrl(null)}
-              className="absolute -top-12 right-0 text-white/70 hover:text-white"
-            >
-              Close
-            </button>
-            <VideoPlayer
-              src={videoUrl}
-              onOutputChanged={handleTrimmedOutput}
-              onDownload={downloadVideo}
-              onResetTrim={handleResetTrimState}
+      {
+        videoUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-8">
+            <div className="relative w-full max-w-6xl">
+              <button
+                onClick={() => setVideoUrl(null)}
+                className="absolute -top-12 right-0 text-white/70 hover:text-white"
+              >
+                Close
+              </button>
+              <VideoPlayer
+                src={videoUrl}
+                onOutputChanged={handleTrimmedOutput}
+                onDownload={downloadVideo}
+                onResetTrim={handleResetTrimState}
+              />
+            </div>
+          </div>
+        )
+      }
+
+      {/* Bottom bar controls */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200 dark:border-slate-800 p-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Composer
+              mode={mode}
+              setMode={setMode}
+              prompt={prompt}
+              setPrompt={setPrompt}
+              imagePrompt={imagePrompt}
+              setImagePrompt={setImagePrompt}
+              startGeneration={startGeneration}
+              isGenerating={isLoadingUI}
+              canStart={canStart}
+              resetAll={resetAll}
+              downloadImage={downloadImage}
+              hasGeneratedImage={!!generatedImage}
+              hasVideoUrl={!!videoUrl}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              editPrompt={editPrompt}
+              setEditPrompt={setEditPrompt}
+              composePrompt={composePrompt}
+              setComposePrompt={setComposePrompt}
+              geminiBusy={geminiBusy}
             />
           </div>
         </div>
-      )}
-
-      <Composer
-        mode={mode}
-        setMode={setMode}
-        hasGeneratedImage={!!generatedImage}
-        hasVideoUrl={!!videoUrl}
-        prompt={prompt}
-        setPrompt={setPrompt}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        canStart={canStart}
-        isGenerating={isLoadingUI}
-        startGeneration={startGeneration}
-        imagePrompt={imagePrompt}
-        setImagePrompt={setImagePrompt}
-        editPrompt={editPrompt}
-        setEditPrompt={setEditPrompt}
-        composePrompt={composePrompt}
-        setComposePrompt={setComposePrompt}
-        geminiBusy={geminiBusy}
-        resetAll={resetAll}
-        downloadImage={downloadImage}
-      />
-    </div >
+      </div>
+    </div>
   );
 };
 

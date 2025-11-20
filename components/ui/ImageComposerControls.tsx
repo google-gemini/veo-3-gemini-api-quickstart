@@ -6,6 +6,9 @@ import { useImagePreview } from "@/context/ImagePreviewContext";
 interface ImageComposerControlsProps {
     onPromptChange: (prompt: string) => void;
     className?: string;
+    onGenerate?: () => void;
+    isGenerating?: boolean;
+    canGenerate?: boolean;
 }
 
 const COMPOSITION_STYLES = [
@@ -32,6 +35,9 @@ interface SamplePrompt {
 export default function ImageComposerControls({
     onPromptChange,
     className = "",
+    onGenerate,
+    isGenerating = false,
+    canGenerate = false,
 }: ImageComposerControlsProps) {
     const { openPreview } = useImagePreview();
     const [compositionStyle, setCompositionStyle] = useState("blend");
@@ -373,6 +379,29 @@ export default function ImageComposerControls({
                             className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-indigo-500"
                         />
                     </div>
+
+                    {onGenerate && (
+                        <>
+                            <div className="h-px bg-white/10" />
+                            <button
+                                onClick={onGenerate}
+                                disabled={isGenerating || !canGenerate}
+                                className={`w-full py-3 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all ${isGenerating || !canGenerate
+                                    ? "bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
+                                    : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg hover:shadow-indigo-500/25"
+                                    }`}
+                            >
+                                {isGenerating ? (
+                                    <>Generating...</>
+                                ) : (
+                                    <>
+                                        <Wand2 className="w-4 h-4 fill-current" />
+                                        Generate Composition
+                                    </>
+                                )}
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
 

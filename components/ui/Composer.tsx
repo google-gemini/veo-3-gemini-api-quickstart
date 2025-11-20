@@ -21,6 +21,7 @@ type StudioMode =
   | "create-image"
   | "edit-image"
   | "compose-image"
+  | "compose-album"
   | "create-video";
 
 interface ComposerProps {
@@ -94,6 +95,8 @@ const Composer: React.FC<ComposerProps> = ({
         return "Edit Image";
       case "compose-image":
         return "Compose Image";
+      case "compose-album":
+        return "Compose Album";
       case "create-video":
         return "Create Video";
       default:
@@ -301,6 +304,30 @@ const Composer: React.FC<ComposerProps> = ({
             {getTabTooltip("compose-image") && (
               <TooltipContent>
                 <p>{getTabTooltip("compose-image")}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() =>
+                  !isTabDisabled("compose-album") && setMode("compose-album")
+                }
+                disabled={isTabDisabled("compose-album")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "compose-album"
+                  ? "bg-pink-400/30 text-slate-900 backdrop-blur-sm"
+                  : isTabDisabled("compose-album")
+                    ? "text-slate-400 cursor-not-allowed opacity-50"
+                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
+                  }`}
+              >
+                <Image className="w-4 h-4" />
+                {getTabText("compose-album")}
+              </button>
+            </TooltipTrigger>
+            {getTabTooltip("compose-album") && (
+              <TooltipContent>
+                <p>{getTabTooltip("compose-album")}</p>
               </TooltipContent>
             )}
           </Tooltip>

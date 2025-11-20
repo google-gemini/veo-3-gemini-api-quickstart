@@ -1,0 +1,77 @@
+[
+    {
+        "id": "album1",
+        "label": "Album 1",
+        "image": "/compositionsamples/album1.png",
+        "images": [
+            {
+                "id": "sample1",
+                "label": "Walking hand in hand",
+                "image": "/compositionsamples/sample1.png",
+                "prompt": "Bride and groom walking hand in hand along a beach at sunset, waves gently lapping, bride’s veil trailing in wind, candid joyful moment, wide shot, romantic ambience"
+            },
+            {
+                "id": "sample2",
+                "label": "Sitting on staircase",
+                "image": "/compositionsamples/sample2.png",
+                "prompt": "Bride sitting on elegant white marble staircase with groom beside her leaning in, natural light from window, soft shadows, intimate and artistic, editorial style"
+            },
+            {
+                "id": "sample3",
+                "label": "Ancient Tamil",
+                "image": "/compositionsamples/sample3.png",
+                "prompt": "Dress them like Ancient Tamil kingdom sitting in throne.  Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons."
+            }
+        ]
+    },
+    {
+        "id": "album2",
+        "label": "Album 2",
+        "image": "/compositionsamples/sample1.png",
+        "images": [
+            {
+                "id": "sample1",
+                "label": "Classic portrait with architectural background",
+                "image": "/compositionsamples/sample1.png",
+                "prompt": "Bride and groom posed in front of colonial-era architecture, bride holding bouquet, groom adjusting his cufflinks, formal but relaxed, rich colours, twilight ambient light"
+            },
+            {
+                "id": "Veil over both faces",
+                "label": "Sitting on staircase",
+                "image": "/compositionsamples/sample2.png",
+                "prompt": "Groom lifting bride off the ground in mid-air spin, joyful expression, bride’s dress swirling, soft outdoor garden setting with string lights overhead, evening glow"
+            },
+            {
+                "id": "sample3",
+                "label": "Rainy day umbrella",
+                "image": "/compositionsamples/sample3.png",
+                "prompt": "Bride and groom sharing a transparent umbrella in light rain, reflections on pavement, city street backdrop, cozy and romantic, muted tones"
+            }
+        ]
+    },
+    {
+        "id": "album2",
+        "label": "Album 2",
+        "image": "/compositionsamples/sample1.png",
+        "images": [
+            {
+                "id": "sample1",
+                "label": "Classic portrait with architectural background",
+                "image": "/compositionsamples/sample1.png",
+                "prompt": "Bride and groom posed in front of colonial-era architecture, bride holding bouquet, groom adjusting his cufflinks, formal but relaxed, rich colours, twilight ambient light"
+            },
+            {
+                "id": "Veil over both faces",
+                "label": "Sitting on staircase",
+                "image": "/compositionsamples/sample2.png",
+                "prompt": "Groom lifting bride off the ground in mid-air spin, joyful expression, bride’s dress swirling, soft outdoor garden setting with string lights overhead, evening glow"
+            },
+            {
+                "id": "sample3",
+                "label": "Rainy day umbrella",
+                "image": "/compositionsamples/sample3.png",
+                "prompt": "Bride and groom sharing a transparent umbrella in light rain, reflections on pavement, city street backdrop, cozy and romantic, muted tones"
+            }
+        ]
+    }
+]

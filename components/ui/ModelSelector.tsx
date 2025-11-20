@@ -5,6 +5,7 @@ type StudioMode =
   | "create-image"
   | "edit-image"
   | "compose-image"
+  | "compose-album"
   | "create-video";
 
 interface ModelSelectorProps {
