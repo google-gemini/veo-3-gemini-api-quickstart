@@ -3,7 +3,7 @@
         "id": "sample1",
         "label": "Walking hand in hand",
         "image": "/compositionsamples/sample1.png",
-        "prompt": "Bride and groom walking hand in hand along a beach at sunset, waves gently lapping, bride’s veil trailing in wind, candid joyful moment, wide shot, romantic ambience"
+        "prompt": "Bride and groom walking hand in hand along a beach at sunset, waves gently lapping, bride\u00e2\u20ac\u2122s veil trailing in wind, candid joyful moment, wide shot, romantic ambience"
     },
     {
         "id": "sample2",
@@ -16,5 +16,65 @@
         "label": "Ancient Tamil",
         "image": "/compositionsamples/sample3.png",
         "prompt": "Dress them like Ancient Tamil kingdom sitting in throne.  Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons."
+    },
+    {
+        "id": "album1_sample1",
+        "label": "Snow Shoot in Kashmir - Shikara on Dal Lake",
+        "image": "/compositionsamples/snow1.png",
+        "prompt": "Tamil couple in a shikara on Dal Lake surrounded by snow-covered mountains, cozy winter outfits, early morning mist, cinematic lighting, reflection in water. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album2_sample1",
+        "label": "Beach Pre-Wedding Shoot - Walking on Shoreline",
+        "image": "/compositionsamples/beach1.png",
+        "prompt": "Couple walking hand-in-hand on golden beach at sunset, waves splashing softly, bride\u00e2\u20ac\u2122s dress flowing, cinematic romance. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album3_sample1",
+        "label": "Taj Mahal Heritage Album - Taj Reflection Pool",
+        "image": "/compositionsamples/taj1.png",
+        "prompt": "Bride and groom posing near reflection pool of Taj Mahal, sunrise glow, soft mist, elegant traditional attire. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album4_sample1",
+        "label": "Paris Dream Wedding - Eiffel Tower Kiss",
+        "image": "/compositionsamples/paris1.png",
+        "prompt": "Bride and groom kissing near Eiffel Tower at sunset, elegant gown, soft Parisian light. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album5_sample1",
+        "label": "Jaipur Royal Palace Wedding - Hawa Mahal Balcony",
+        "image": "/compositionsamples/jaipur1.png",
+        "prompt": "Bride and groom in royal traditional attire posing at Hawa Mahal balcony, pink sandstone glow, detailed architecture behind, regal romantic style. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album6_sample1",
+        "label": "Maldives Yacht & Beach Romance - Yacht Front Pose",
+        "image": "/compositionsamples/maldiv1.png",
+        "prompt": "Couple standing at front of luxury yacht in Maldives, turquoise ocean, wind blowing gently, cinematic elite vibe. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album7_sample1",
+        "label": "Forest Fairy Tale Shoot - Misty Forest Walk",
+        "image": "/compositionsamples/forest1.png",
+        "prompt": "Couple walking inside dense misty forest, tall evergreen trees, fairytale ambience, magical cinematic tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album8_sample1",
+        "label": "Dubai Desert Majesty - Sand Dune Walk",
+        "image": "/compositionsamples/dubai1.png",
+        "prompt": "Couple walking on golden Dubai dunes at sunset, long shadows, warm cinematic tones. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album9_sample1",
+        "label": "Kerala Backwater Romance - Houseboat Deck",
+        "image": "/compositionsamples/kerala1.png",
+        "prompt": "Bride and groom posing on wooden Kerala houseboat deck, calm backwaters, coconut trees around. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "album10_sample1",
+        "label": "Tamil Temple Divine Shoot - Temple Entrance",
+        "image": "/compositionsamples/temple1.png",
+        "prompt": "Couple standing at ancient Tamil temple entrance with tall gopuram behind, traditional attire, divine calm. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
     }
 ]

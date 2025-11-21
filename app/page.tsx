@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, Maximize2 } from "lucide-react";
+import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
@@ -39,6 +39,8 @@ interface HistoryItem {
   imageUrl: string;
   timestamp: number;
   folderId: string | null;
+  prompt?: string;
+  mode?: StudioMode;
 }
 
 interface Folder {
@@ -301,7 +303,9 @@ const VeoStudioContent: React.FC = () => {
           id: Date.now().toString(),
           imageUrl: dataUrl,
           timestamp: Date.now(),
-          folderId: selectedFolder === 'default' ? null : selectedFolder
+          folderId: selectedFolder === 'default' ? null : selectedFolder,
+          prompt: imagePrompt,
+          mode: "create-image"
         }, ...prev]);
       } else if (json?.error) {
         console.error("Imagen API returned error:", json.error);
@@ -343,7 +347,9 @@ const VeoStudioContent: React.FC = () => {
           id: Date.now().toString(),
           imageUrl: dataUrl,
           timestamp: Date.now(),
-          folderId: selectedFolder === 'default' ? null : selectedFolder
+          folderId: selectedFolder === 'default' ? null : selectedFolder,
+          prompt: imagePrompt,
+          mode: "create-image"
         }, ...prev]);
       } else if (json?.error) {
         console.error("Gemini API returned error:", json.error);
@@ -396,7 +402,9 @@ const VeoStudioContent: React.FC = () => {
           id: Date.now().toString(),
           imageUrl: dataUrl,
           timestamp: Date.now(),
-          folderId: selectedFolder === 'default' ? null : selectedFolder
+          folderId: selectedFolder === 'default' ? null : selectedFolder,
+          prompt: editPrompt,
+          mode: "edit-image"
         }, ...prev]);
       } else if (json?.error) {
         console.error("Gemini edit API returned error:", json.error);
@@ -412,7 +420,7 @@ const VeoStudioContent: React.FC = () => {
   }, [editPrompt, imageFile, generatedImage, selectedFolder]);
 
   // Gemini image compose helper
-  const composeWithGemini = useCallback(async () => {
+  const composeWithGemini = useCallback(async (isRetry = false) => {
     setGeminiBusy(true);
     setGeneratedImage(null);
     try {
@@ -426,19 +434,25 @@ const VeoStudioContent: React.FC = () => {
       if (imageFile) {
         form.append("imageFiles", imageFile);
       } else if (generatedImage) {
-        const [meta, b64] = generatedImage.split(",");
-        const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
-        const byteCharacters = atob(b64);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        // If retrying and we have uploaded multiple images, do NOT include the currently generated image
+        // as it is likely the result of the previous generation.
+        // We want to retry with the ORIGINAL sources (the uploaded files).
+        // If we don't have uploaded files, we might be composing on top of a generated image, so we keep it.
+        if (!isRetry || multipleImageFiles.length === 0) {
+          const [meta, b64] = generatedImage.split(",");
+          const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
+          const byteCharacters = atob(b64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: mime });
+          const existingImageFile = new File([blob], "existing-image.png", {
+            type: mime,
+          });
+          form.append("imageFiles", existingImageFile);
         }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: mime });
-        const existingImageFile = new File([blob], "existing-image.png", {
-          type: mime,
-        });
-        form.append("imageFiles", existingImageFile);
       }
 
       const resp = await fetch("/api/gemini/edit", {
@@ -461,7 +475,9 @@ const VeoStudioContent: React.FC = () => {
           id: Date.now().toString(),
           imageUrl: dataUrl,
           timestamp: Date.now(),
-          folderId: selectedFolder === 'default' ? null : selectedFolder
+          folderId: selectedFolder === 'default' ? null : selectedFolder,
+          prompt: composePrompt,
+          mode: "compose-image"
         }, ...prev]);
       } else if (json?.error) {
         console.error("Gemini compose API returned error:", json.error);
@@ -505,7 +521,9 @@ const VeoStudioContent: React.FC = () => {
             id: Date.now().toString(),
             imageUrl: dataUrl,
             timestamp: Date.now(),
-            folderId: selectedFolder === 'default' ? null : selectedFolder
+            folderId: selectedFolder === 'default' ? null : selectedFolder,
+            prompt: item.prompt,
+            mode: "compose-album"
           }, ...prev]);
         }
       } catch (e) {
@@ -515,7 +533,7 @@ const VeoStudioContent: React.FC = () => {
     setIsGeneratingAlbum(false);
   }, [albumItems, albumSourceImage, selectedFolder]);
 
-  const startGeneration = useCallback(async () => {
+  const startGeneration = useCallback(async (isRetry = false) => {
     if (!canStart) return;
 
     if (mode === "create-video") {
@@ -559,7 +577,7 @@ const VeoStudioContent: React.FC = () => {
     } else if (mode === "edit-image") {
       await editWithGemini();
     } else if (mode === "compose-image") {
-      await composeWithGemini();
+      await composeWithGemini(isRetry);
     } else if (mode === "compose-album") {
       await generateAlbum();
     }
@@ -1000,8 +1018,28 @@ const VeoStudioContent: React.FC = () => {
                 width={800}
                 height={450}
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                <Maximize2 className="w-8 h-8 text-white drop-shadow-lg" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startGeneration(true);
+                  }}
+                  disabled={!canStart}
+                  className={`p-3 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm border border-white/10 transition-all ${!canStart ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+                  title="Retry Generation"
+                >
+                  <RotateCcw className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openPreview(generatedImage);
+                  }}
+                  className="p-3 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm border border-white/10 transition-all hover:scale-110"
+                  title="View Fullscreen"
+                >
+                  <Maximize2 className="w-6 h-6" />
+                </button>
               </div>
             </div>
           )}
@@ -1077,7 +1115,17 @@ const VeoStudioContent: React.FC = () => {
                   <div
                     key={item.id}
                     className="w-full aspect-square relative shrink-0 cursor-pointer border-2 border-white/20 hover:border-white/80 rounded-lg overflow-hidden transition-all shadow-sm hover:shadow-md group"
-                    onClick={() => setGeneratedImage(item.imageUrl)}
+                    onClick={() => {
+                      setGeneratedImage(item.imageUrl);
+                      if (item.mode) {
+                        setMode(item.mode);
+                        if (item.prompt) {
+                          if (item.mode === "create-image") setImagePrompt(item.prompt);
+                          else if (item.mode === "edit-image") setEditPrompt(item.prompt);
+                          else if (item.mode === "compose-image") setComposePrompt(item.prompt);
+                        }
+                      }
+                    }}
                     onContextMenu={(e) => {
                       e.preventDefault();
                       // Show folder assignment menu
