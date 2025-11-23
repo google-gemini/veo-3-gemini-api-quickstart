@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2, Folder } from "lucide-react";
+import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2, Folder, Search } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
@@ -86,6 +86,7 @@ const VeoStudioContent: React.FC = () => {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [openFolderDropdown, setOpenFolderDropdown] = useState<string | null>(null);
+  const [historySearchQuery, setHistorySearchQuery] = useState("");
 
   const [operationName, setOperationName] = useState<VeoOperationName>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -1237,25 +1238,50 @@ const VeoStudioContent: React.FC = () => {
         history.length > 0 && (
           <div className="fixed left-6 top-24 bottom-32 z-20 w-48 overflow-hidden flex flex-col pointer-events-none">
             <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+              {/* Search Bar */}
+              <div className="mb-2 relative">
+                <Search className="absolute left-2 top-1.5 w-3.5 h-3.5 text-slate-400" />
+                <input
+                  type="text"
+                  value={historySearchQuery}
+                  onChange={(e) => setHistorySearchQuery(e.target.value)}
+                  placeholder="Search history..."
+                  className="w-full pl-7 pr-2 py-1 text-xs border rounded bg-white dark:bg-slate-800 dark:border-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
               {/* Folder tabs */}
               <div className="flex flex-col gap-1 mb-2">
-                {folders.map((folder) => {
-                  const folderItems = folder.id === 'default'
-                    ? history
-                    : history.filter(item => item.folderId === folder.id);
-                  return (
-                    <button
-                      key={folder.id}
-                      onClick={() => setSelectedFolder(folder.id)}
-                      className={`px-2 py-1 text-xs rounded transition-colors text-left ${selectedFolder === folder.id
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-                        }`}
-                    >
-                      {folder.name} ({folderItems.length})
-                    </button>
-                  );
-                })}
+                {folders
+                  .filter(f =>
+                    !historySearchQuery ||
+                    f.name.toLowerCase().includes(historySearchQuery.toLowerCase()) ||
+                    f.id === 'default' // Always show 'All Images' unless we want to hide it too, but usually good to keep. Actually, if searching for a specific folder, maybe hide others. Let's keep default if it matches OR if query is empty.
+                  )
+                  .map((folder) => {
+                    const folderItems = folder.id === 'default'
+                      ? history
+                      : history.filter(item => item.folderId === folder.id);
+
+                    // If searching, also filter items count
+                    const matchingItemsCount = historySearchQuery
+                      ? folderItems.filter(item => item.prompt?.toLowerCase().includes(historySearchQuery.toLowerCase())).length
+                      : folderItems.length;
+
+                    return (
+                      <button
+                        key={folder.id}
+                        onClick={() => setSelectedFolder(folder.id)}
+                        className={`px-2 py-1 text-xs rounded transition-colors text-left flex justify-between ${selectedFolder === folder.id
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                          }`}
+                      >
+                        <span>{folder.name}</span>
+                        <span className="opacity-70">{matchingItemsCount}</span>
+                      </button>
+                    );
+                  })}
                 <button
                   onClick={() => setIsCreatingFolder(true)}
                   className="px-2 py-1 text-xs rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
@@ -1293,7 +1319,11 @@ const VeoStudioContent: React.FC = () => {
                 History
               </div>
               {history
-                .filter(item => selectedFolder === 'default' || item.folderId === selectedFolder)
+                .filter(item => {
+                  const matchesFolder = selectedFolder === 'default' || item.folderId === selectedFolder;
+                  const matchesSearch = !historySearchQuery || item.prompt?.toLowerCase().includes(historySearchQuery.toLowerCase());
+                  return matchesFolder && matchesSearch;
+                })
                 .map((item) => (
                   <div
                     key={item.id}

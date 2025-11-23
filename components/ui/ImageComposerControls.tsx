@@ -42,7 +42,7 @@ export default function ImageComposerControls({
     canGenerate = false,
 }: ImageComposerControlsProps) {
     const { openPreview } = useImagePreview();
-    const [compositionStyle, setCompositionStyle] = useState("blend");
+    const [compositionStyle, setCompositionStyle] = useState("");
     const [layout, setLayout] = useState("grid");
     const [vibe, setVibe] = useState("realistic");
     const [density, setDensity] = useState(50); // 0 to 100
@@ -125,7 +125,7 @@ export default function ImageComposerControls({
     }, [compositionStyle, layout, vibe, density, characterConsistency, matchLighting, textIntegration, selectedSampleId, samples, onPromptChange]);
 
     const handleReset = () => {
-        setCompositionStyle("blend");
+        setCompositionStyle("");
         setLayout("grid");
         setVibe("realistic");
         setDensity(50);
