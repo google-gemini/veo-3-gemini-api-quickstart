@@ -668,5 +668,72 @@
                 "prompt": "Couple posing in front of tall temple gopuram at sunset, orange sky, spiritual cinematic frame. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             }
         ]
+    },
+    {
+        "id": "album_ghibli",
+        "label": "Studio Ghibli Dreamscape Album",
+        "image": "/compositionsamples/album_ghibli_sample.png",
+        "images": [
+            {
+                "id": "sample1",
+                "label": "Ghibli Forest Path",
+                "image": "/compositionsamples/ghibli1.png",
+                "prompt": "Tamil couple standing on a magical Studio Ghibli-style forest path, glowing fireflies drifting around, soft watercolor greenery, warm evening light, dreamy atmosphere. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample2",
+                "label": "Windy Hilltop Scene",
+                "image": "/compositionsamples/ghibli2.png",
+                "prompt": "Couple on a grassy hilltop with Ghibli-style winds blowing, long grass swaying, pastel blue sky with fluffy clouds, peaceful Howl's Moving Castle vibe. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample3",
+                "label": "Floating Spirit Lights",
+                "image": "/compositionsamples/ghibli3.png",
+                "prompt": "Bride and groom surrounded by soft glowing Ghibli spirit lights like in Spirited Away, gentle night forest, subtle magic particles floating around them. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample4",
+                "label": "Ghibli Town Street",
+                "image": "/compositionsamples/ghibli4.png",
+                "prompt": "Couple walking through a cozy Ghibli-style Japanese town street, lanterns glowing, old wooden shops, warm watercolor tones, nostalgic romantic mood. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample5",
+                "label": "Flying Sky Scene",
+                "image": "/compositionsamples/ghibli5.png",
+                "prompt": "Couple gently floating in the sky like in Castle in the Sky, soft pastel clouds, glowing sunlight rim, magical realism and whimsical feeling. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample6",
+                "label": "Train on the Sea",
+                "image": "/compositionsamples/ghibli6.png",
+                "prompt": "Studio Ghibli sea-train moment inspired by Spirited Away, couple sitting on red train seats, calm ocean outside, surreal peaceful mood, watercolor reflections. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample7",
+                "label": "Totoro Forest Vibes",
+                "image": "/compositionsamples/ghibli7.png",
+                "prompt": "Couple standing under a giant magical tree with Ghibli-style soft rain, umbrella moment, lush green forest inspired by Totoro ambience. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample8",
+                "label": "Sunset Cliff Scene",
+                "image": "/compositionsamples/ghibli8.png",
+                "prompt": "Couple standing on cliff edge with Ghibli sunset sky, orange-pink gradient, long soft shadows, peaceful romantic tone. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample9",
+                "label": "Ghibli Flower Field",
+                "image": "/compositionsamples/ghibli9.png",
+                "prompt": "Couple sitting in a vast Ghibli-style flower field, gentle wind moving petals, soft pastel colors, warm lighting like Howl and Sophie’s meadow. Preserve the exact identity of the real people in the source image."
+            },
+            {
+                "id": "sample10",
+                "label": "Magical Spirit Path",
+                "image": "/compositionsamples/ghibli10.png",
+                "prompt": "Couple walking on a glowing spirit path with floating lanterns guiding them, Ghibli magical ambiance, mystical lights, soft dreamy colors. Preserve the exact identity of the real people in the source image."
+            }
+        ]
     }
 ]

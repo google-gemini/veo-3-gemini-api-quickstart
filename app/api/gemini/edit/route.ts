@@ -25,6 +25,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
     }
 
+    // Check credits
+    const { createClient } = await import('@/lib/supabase/server')
+    const { prisma } = await import('@/lib/prisma')
+
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const profile = await prisma.userProfile.findUnique({
+      where: { id: user.id }
+    })
+
+    if (!profile || profile.credits < 1) {
+      return NextResponse.json({ error: "Insufficient credits" }, { status: 403 })
+    }
+
     // Handle multiple image files
     const imageFiles = form.getAll("imageFiles");
     console.log("Received imageFiles from form:", imageFiles.length);
@@ -108,6 +127,12 @@ export async function POST(req: Request) {
       model: "gemini-2.5-flash-image-preview",
       contents: contents,
     });
+
+    // Deduct credit on success
+    await prisma.userProfile.update({
+      where: { id: user.id },
+      data: { credits: { decrement: 1 } }
+    })
 
     // Process the response to extract the image
     let imageData = null;

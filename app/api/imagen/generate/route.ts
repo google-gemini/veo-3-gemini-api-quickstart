@@ -17,6 +17,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
     }
 
+    // Check credits
+    const { createClient } = await import('@/lib/supabase/server')
+    const { prisma } = await import('@/lib/prisma')
+
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const profile = await prisma.userProfile.findUnique({
+      where: { id: user.id }
+    })
+
+    if (!profile || profile.credits < 1) {
+      return NextResponse.json({ error: "Insufficient credits" }, { status: 403 })
+    }
+
     const resp = await ai.models.generateImages({
       model,
       prompt,
@@ -24,6 +43,12 @@ export async function POST(req: Request) {
         aspectRatio: "16:9",
       },
     });
+
+    // Deduct credit on success
+    await prisma.userProfile.update({
+      where: { id: user.id },
+      data: { credits: { decrement: 1 } }
+    })
 
     const image = resp.generatedImages?.[0]?.image;
     if (!image?.imageBytes) {

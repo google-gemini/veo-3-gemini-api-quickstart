@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Sun, Contrast, Thermometer, Palette, RotateCcw, Eraser, Image as ImageIcon, Wand2 } from "lucide-react";
 
+import { PromptLibrary } from "@/components/ui/PromptLibrary";
+
 interface PhotoEditorControlsProps {
     onPromptChange: (prompt: string) => void;
     className?: string;
@@ -121,13 +123,19 @@ export default function PhotoEditorControls({
                 <h3 className="text-sm font-semibold uppercase tracking-wider opacity-70">
                     Photo Editor
                 </h3>
-                <button
-                    onClick={handleReset}
-                    className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                    title="Reset all"
-                >
-                    <RotateCcw className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={handleReset}
+                        className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+                        title="Reset all"
+                    >
+                        <RotateCcw className="w-4 h-4" />
+                    </button>
+                    <PromptLibrary
+                        currentPrompt={""}
+                        onSelectPrompt={(text) => onPromptChange(text)}
+                    />
+                </div>
             </div>
 
             <div className="space-y-6">

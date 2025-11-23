@@ -16,6 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PromptLibrary } from "@/components/ui/PromptLibrary";
 
 type StudioMode =
   | "create-image"
@@ -206,6 +207,20 @@ const Composer: React.FC<ComposerProps> = ({
             >
               <RotateCcw className="w-5 h-5" />
             </button>
+            <PromptLibrary
+              currentPrompt={
+                mode === "create-image" ? imagePrompt :
+                  mode === "edit-image" ? editPrompt :
+                    mode === "compose-image" ? composePrompt :
+                      prompt
+              }
+              onSelectPrompt={(text) => {
+                if (mode === "create-image") setImagePrompt(text);
+                else if (mode === "edit-image") setEditPrompt(text);
+                else if (mode === "compose-image") setComposePrompt(text);
+                else setPrompt(text);
+              }}
+            />
           </div>
           <button
             onClick={startGeneration}
@@ -356,8 +371,8 @@ const Composer: React.FC<ComposerProps> = ({
             )}
           </Tooltip>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

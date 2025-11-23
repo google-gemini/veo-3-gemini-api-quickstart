@@ -8,13 +8,14 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw } from "lucide-react";
+import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2 } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
 import AlbumComposerControls from "@/components/ui/AlbumComposerControls";
 import { ImagePreviewProvider, useImagePreview } from "@/context/ImagePreviewContext";
 import Composer from "@/components/ui/Composer"; // Keeping this if it's needed for the sidebar wrapper, though the JSX seems to use specific controls.
+import LoginButton from "@/components/auth/LoginButton";
 
 type VeoOperationName = string | null;
 
@@ -135,11 +136,8 @@ const VeoStudioContent: React.FC = () => {
     };
   }, [imageFile]);
 
-  // Friendly model label for UI
   const modelLabel = useMemo(() => {
     const cleaned = selectedModel
-      .replace(/_/g, " ")
-      .replace(/-/g, " ")
       .replace(/preview/gi, "")
       .trim();
     return cleaned || selectedModel;
@@ -276,6 +274,31 @@ const VeoStudioContent: React.FC = () => {
     trimmedBlobRef.current = null;
   };
 
+  const saveToGallery = async (dataUrl: string, promptText: string) => {
+    try {
+      const [meta, b64] = dataUrl.split(",");
+      const mime = meta.split(";")[0].replace("data:", "");
+
+      const resp = await fetch('/api/images/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: b64,
+          prompt: promptText,
+          mimeType: mime
+        })
+      });
+
+      if (!resp.ok) {
+        const json = await resp.json();
+        console.error('Save API failed:', json);
+        // Optional: alert('Failed to save image to gallery: ' + (json.error || resp.statusText));
+      }
+    } catch (e) {
+      console.error('Failed to save to gallery:', e);
+    }
+  };
+
   // Imagen helper
   const generateWithImagen = useCallback(async () => {
     console.log("Starting Imagen generation");
@@ -289,6 +312,8 @@ const VeoStudioContent: React.FC = () => {
       });
 
       if (!resp.ok) {
+        if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+        if (resp.status === 403) throw new Error("Insufficient credits.");
         console.error("Imagen API error:", resp.status, resp.statusText);
         throw new Error(`API error: ${resp.status}`);
       }
@@ -307,6 +332,9 @@ const VeoStudioContent: React.FC = () => {
           prompt: imagePrompt,
           mode: "create-image"
         }, ...prev]);
+
+        // Save to DB
+        saveToGallery(dataUrl, imagePrompt);
       } else if (json?.error) {
         console.error("Imagen API returned error:", json.error);
         throw new Error(json.error);
@@ -333,6 +361,8 @@ const VeoStudioContent: React.FC = () => {
       });
 
       if (!resp.ok) {
+        if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+        if (resp.status === 403) throw new Error("Insufficient credits.");
         console.error("Gemini API error:", resp.status, resp.statusText);
         throw new Error(`API error: ${resp.status}`);
       }
@@ -351,6 +381,9 @@ const VeoStudioContent: React.FC = () => {
           prompt: imagePrompt,
           mode: "create-image"
         }, ...prev]);
+
+        // Save to DB
+        saveToGallery(dataUrl, imagePrompt);
       } else if (json?.error) {
         console.error("Gemini API returned error:", json.error);
         throw new Error(json.error);
@@ -388,6 +421,8 @@ const VeoStudioContent: React.FC = () => {
       });
 
       if (!resp.ok) {
+        if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+        if (resp.status === 403) throw new Error("Insufficient credits.");
         console.error("Gemini edit API error:", resp.status, resp.statusText);
         throw new Error(`API error: ${resp.status}`);
       }
@@ -406,6 +441,10 @@ const VeoStudioContent: React.FC = () => {
           prompt: editPrompt,
           mode: "edit-image"
         }, ...prev]);
+
+        // Save to DB
+        saveToGallery(dataUrl, editPrompt);
+        dispatchCreditUpdate();
       } else if (json?.error) {
         console.error("Gemini edit API returned error:", json.error);
         throw new Error(json.error);
@@ -461,6 +500,8 @@ const VeoStudioContent: React.FC = () => {
       });
 
       if (!resp.ok) {
+        if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+        if (resp.status === 403) throw new Error("Insufficient credits.");
         console.error("Gemini compose API error:", resp.status, resp.statusText);
         throw new Error(`API error: ${resp.status}`);
       }
@@ -479,6 +520,10 @@ const VeoStudioContent: React.FC = () => {
           prompt: composePrompt,
           mode: "compose-image"
         }, ...prev]);
+
+        // Save to DB
+        saveToGallery(dataUrl, composePrompt);
+        dispatchCreditUpdate();
       } else if (json?.error) {
         console.error("Gemini compose API returned error:", json.error);
         throw new Error(json.error);
@@ -511,7 +556,11 @@ const VeoStudioContent: React.FC = () => {
           body: form,
         });
 
-        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+        if (!resp.ok) {
+          if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+          if (resp.status === 403) throw new Error("Insufficient credits.");
+          throw new Error(`API error: ${resp.status}`);
+        }
 
         const json = await resp.json();
         if (json?.image?.imageBytes) {
@@ -525,6 +574,10 @@ const VeoStudioContent: React.FC = () => {
             prompt: item.prompt,
             mode: "compose-album"
           }, ...prev]);
+
+          // Save to DB
+          saveToGallery(dataUrl, item.prompt);
+          dispatchCreditUpdate();
         }
       } catch (e) {
         console.error("Error generating album image", e);
@@ -562,11 +615,20 @@ const VeoStudioContent: React.FC = () => {
           method: "POST",
           body: form,
         });
+
+        if (!resp.ok) {
+          if (resp.status === 401) throw new Error("Please sign in to start your 14-day free trial with 100 credits!");
+          if (resp.status === 403) throw new Error("Insufficient credits.");
+          throw new Error(`API error: ${resp.status}`);
+        }
+
         const json = await resp.json();
         setOperationName(json?.name || null);
-      } catch (e) {
+        if (json?.name) dispatchCreditUpdate();
+      } catch (e: any) {
         console.error(e);
         setIsGenerating(false);
+        alert(e.message);
       }
     } else if (mode === "create-image") {
       if (selectedModel.includes("imagen")) {
@@ -667,6 +729,10 @@ const VeoStudioContent: React.FC = () => {
     }
     trimmedUrlRef.current = URL.createObjectURL(blob);
     setVideoUrl(trimmedUrlRef.current);
+  };
+
+  const dispatchCreditUpdate = () => {
+    window.dispatchEvent(new Event('credits-updated'));
   };
 
   const handleResetTrimState = () => {
@@ -771,6 +837,9 @@ const VeoStudioContent: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
+      <div className="absolute top-4 right-4 z-50">
+        <LoginButton />
+      </div>
       {/* Main content area */}
       <div
         className={`flex flex-col items-center justify-center min-h-screen pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
@@ -1149,6 +1218,21 @@ const VeoStudioContent: React.FC = () => {
                     {generatedImage === item.imageUrl && (
                       <div className="absolute inset-0 ring-2 ring-inset ring-blue-500 rounded-lg" />
                     )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm("Delete this image from history?")) {
+                          setHistory((prev) => prev.filter((h) => h.id !== item.id));
+                          if (generatedImage === item.imageUrl) {
+                            setGeneratedImage(null);
+                          }
+                        }
+                      }}
+                      className="absolute top-1 right-1 p-1 bg-black/50 hover:bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
+                      title="Delete from history"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
                   </div>
                 ))}
             </div>

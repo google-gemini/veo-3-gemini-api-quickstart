@@ -76,5 +76,11 @@
         "label": "Tamil Temple Divine Shoot - Temple Entrance",
         "image": "/compositionsamples/temple1.png",
         "prompt": "Couple standing at ancient Tamil temple entrance with tall gopuram behind, traditional attire, divine calm. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+    },
+    {
+        "id": "sample9",
+        "label": "Ghibli Flower Field",
+        "image": "/compositionsamples/album_ghibli_sample.png",
+        "prompt": "Couple sitting in a vast Ghibli-style flower field, gentle wind moving petals, soft pastel colors, warm lighting like Howl and Sophie’s meadow. Preserve the exact identity of the real people in the source image."
     }
 ]

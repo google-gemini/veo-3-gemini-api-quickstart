@@ -3,6 +3,8 @@ import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, Use
 import Image from "next/image";
 import { useImagePreview } from "@/context/ImagePreviewContext";
 
+import { PromptLibrary } from "@/components/ui/PromptLibrary";
+
 interface ImageComposerControlsProps {
     onPromptChange: (prompt: string) => void;
     className?: string;
@@ -155,13 +157,19 @@ export default function ImageComposerControls({
                     <h3 className="text-sm font-semibold uppercase tracking-wider opacity-70">
                         Image Composer
                     </h3>
-                    <button
-                        onClick={handleReset}
-                        className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                        title="Reset all"
-                    >
-                        <RotateCcw className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleReset}
+                            className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+                            title="Reset all"
+                        >
+                            <RotateCcw className="w-4 h-4" />
+                        </button>
+                        <PromptLibrary
+                            currentPrompt={""}
+                            onSelectPrompt={(text) => onPromptChange(text)}
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-6">
