@@ -61,8 +61,11 @@ export async function POST(req: Request) {
         mimeType: image.mimeType || "image/png",
       },
     });
-  } catch (error) {
-    console.error("Error generating image:", error);
+  } catch (error: any) {
+    console.error("Error generating image:", error?.message || error);
+    if (error?.response) {
+      console.error("Imagen API Error Response:", JSON.stringify(error.response, null, 2));
+    }
     return NextResponse.json(
       { error: "Failed to generate image" },
       { status: 500 }

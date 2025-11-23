@@ -84,8 +84,11 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ name });
-  } catch (error: unknown) {
-    console.error("Error starting Veo generation:", error);
+  } catch (error: any) {
+    console.error("Error starting Veo generation:", error?.message || error);
+    if (error?.response) {
+      console.error("Veo API Error Response:", JSON.stringify(error.response, null, 2));
+    }
     return NextResponse.json(
       { error: "Failed to start generation" },
       { status: 500 }

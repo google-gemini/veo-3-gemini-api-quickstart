@@ -255,6 +255,33 @@ const VeoStudioContent: React.FC = () => {
     }
   };
 
+  // Delete image function
+  const deleteImage = async (imageId: string) => {
+    try {
+      const resp = await fetch('/api/images/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageId })
+      });
+
+      if (resp.ok) {
+        setHistory(prev => prev.filter(h => h.id !== imageId));
+        if (generatedImage) {
+          // If the deleted image is the one currently displayed, clear it
+          // We need to check if the generatedImage URL matches the deleted item's URL
+          // But we only have imageId here. The caller should handle UI clearing if needed,
+          // or we can find the item in history before deleting to check URL.
+          // For simplicity, we'll let the caller handle the UI state update for generatedImage
+          // or we can do it here if we pass the URL or check history.
+        }
+      } else {
+        console.error('Failed to delete image:', await resp.text());
+      }
+    } catch (e) {
+      console.error('Failed to delete image:', e);
+    }
+  };
+
   const modelLabel = useMemo(() => {
     const cleaned = selectedModel
       .replace(/preview/gi, "")
@@ -528,10 +555,11 @@ const VeoStudioContent: React.FC = () => {
       if (imageFile) {
         form.append("imageFile", imageFile);
       } else if (generatedImage) {
-        const [meta, b64] = generatedImage.split(",");
-        const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
-        form.append("imageBase64", b64);
-        form.append("imageMimeType", mime);
+        // Handle both data URLs and remote URLs
+        const response = await fetch(generatedImage);
+        const blob = await response.blob();
+        const file = new File([blob], "image.png", { type: blob.type || "image/png" });
+        form.append("imageFile", file);
       }
 
       const resp = await fetch("/api/gemini/edit", {
@@ -597,17 +625,10 @@ const VeoStudioContent: React.FC = () => {
         // We want to retry with the ORIGINAL sources (the uploaded files).
         // If we don't have uploaded files, we might be composing on top of a generated image, so we keep it.
         if (!isRetry || multipleImageFiles.length === 0) {
-          const [meta, b64] = generatedImage.split(",");
-          const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
-          const byteCharacters = atob(b64);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: mime });
+          const response = await fetch(generatedImage);
+          const blob = await response.blob();
           const existingImageFile = new File([blob], "existing-image.png", {
-            type: mime,
+            type: blob.type || "image/png",
           });
           form.append("imageFiles", existingImageFile);
         }
@@ -722,10 +743,10 @@ const VeoStudioContent: React.FC = () => {
         if (imageFile) {
           form.append("imageFile", imageFile);
         } else if (generatedImage) {
-          const [meta, b64] = generatedImage.split(",");
-          const mime = meta?.split(";")?.[0]?.replace("data:", "") || "image/png";
-          form.append("imageBase64", b64);
-          form.append("imageMimeType", mime);
+          const response = await fetch(generatedImage);
+          const blob = await response.blob();
+          const file = new File([blob], "image.png", { type: blob.type || "image/png" });
+          form.append("imageFile", file);
         }
       }
 
@@ -1330,13 +1351,13 @@ const VeoStudioContent: React.FC = () => {
                     className="w-full aspect-square relative shrink-0 cursor-pointer border-2 border-white/20 hover:border-white/80 rounded-lg overflow-hidden transition-all shadow-sm hover:shadow-md group"
                     onClick={() => {
                       setGeneratedImage(item.imageUrl);
-                      if (item.mode) {
-                        setMode(item.mode);
-                        if (item.prompt) {
-                          if (item.mode === "create-image") setImagePrompt(item.prompt);
-                          else if (item.mode === "edit-image") setEditPrompt(item.prompt);
-                          else if (item.mode === "compose-image") setComposePrompt(item.prompt);
-                        }
+                      // Always switch to edit mode as requested
+                      setMode("edit-image");
+                      if (item.prompt) {
+                        setEditPrompt(item.prompt);
+                        // Also populate other prompts for convenience
+                        setImagePrompt(item.prompt);
+                        setComposePrompt(item.prompt);
                       }
                     }}
                   >
@@ -1398,10 +1419,10 @@ const VeoStudioContent: React.FC = () => {
 
                     {/* Delete button */}
                     <button
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
                         if (window.confirm("Delete this image from history?")) {
-                          setHistory((prev) => prev.filter((h) => h.id !== item.id));
+                          await deleteImage(item.id);
                           if (generatedImage === item.imageUrl) {
                             setGeneratedImage(null);
                           }
