@@ -9,6 +9,7 @@ import {
   Video,
   Download,
   Sparkles,
+  Lock,
 } from "lucide-react";
 import ModelSelector from "@/components/ui/ModelSelector";
 import {
@@ -349,26 +350,17 @@ const Composer: React.FC<ComposerProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() =>
-                  !isTabDisabled("create-video") && setMode("create-video")
-                }
-                disabled={isTabDisabled("create-video")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "create-video"
-                  ? "bg-purple-400/30 text-slate-900 backdrop-blur-sm"
-                  : isTabDisabled("create-video")
-                    ? "text-slate-400 cursor-not-allowed opacity-50"
-                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                  }`}
+                disabled={true}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 bg-gray-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed opacity-60`}
               >
                 <Video className="w-4 h-4" />
                 {getTabText("create-video")}
+                <Lock className="w-3 h-3 ml-1" />
               </button>
             </TooltipTrigger>
-            {getTabTooltip("create-video") && (
-              <TooltipContent>
-                <p>{getTabTooltip("create-video")}</p>
-              </TooltipContent>
-            )}
+            <TooltipContent>
+              <p>Create Video (Premium Only)</p>
+            </TooltipContent>
           </Tooltip>
         </div>
       </div >
