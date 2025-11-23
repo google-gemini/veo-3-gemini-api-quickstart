@@ -8,6 +8,17 @@ export async function GET(request: Request) {
     // if "next" is in param, use it as the redirect URL
     const next = searchParams.get('next') ?? '/'
 
+    console.log('Auth Callback Debug:', {
+        url: request.url,
+        origin,
+        headers: {
+            host: request.headers.get('host'),
+            'x-forwarded-host': request.headers.get('x-forwarded-host'),
+            'x-forwarded-proto': request.headers.get('x-forwarded-proto'),
+            'forwarded': request.headers.get('forwarded')
+        }
+    })
+
     if (code) {
         const supabase = await createClient()
         const { error } = await supabase.auth.exchangeCodeForSession(code)
@@ -39,13 +50,13 @@ export async function GET(request: Request) {
                 }
             }
 
-            const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
-            const isLocalEnv = process.env.NODE_ENV === 'development'
-            if (isLocalEnv) {
-                // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-                return NextResponse.redirect(`${origin}${next}`)
-            } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`)
+            const forwardedHostHeader = request.headers.get('x-forwarded-host') // original origin before load balancer
+            const forwardedProtoHeader = request.headers.get('x-forwarded-proto')
+
+            if (forwardedHostHeader) {
+                const forwardedHost = forwardedHostHeader.split(',')[0].trim()
+                const forwardedProto = forwardedProtoHeader?.split(',')[0].trim() || 'https'
+                return NextResponse.redirect(`${forwardedProto}://${forwardedHost}${next}`)
             } else {
                 return NextResponse.redirect(`${origin}${next}`)
             }

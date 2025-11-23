@@ -612,27 +612,38 @@ const VeoStudioContent: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", composePrompt);
+      console.log("Compose: Prompt:", composePrompt);
 
+      let fileCount = 0;
       for (const file of multipleImageFiles) {
         form.append("imageFiles", file);
+        fileCount++;
       }
 
       if (imageFile) {
         form.append("imageFiles", imageFile);
+        fileCount++;
       } else if (generatedImage) {
         // If retrying and we have uploaded multiple images, do NOT include the currently generated image
         // as it is likely the result of the previous generation.
         // We want to retry with the ORIGINAL sources (the uploaded files).
         // If we don't have uploaded files, we might be composing on top of a generated image, so we keep it.
         if (!isRetry || multipleImageFiles.length === 0) {
-          const response = await fetch(generatedImage);
-          const blob = await response.blob();
-          const existingImageFile = new File([blob], "existing-image.png", {
-            type: blob.type || "image/png",
-          });
-          form.append("imageFiles", existingImageFile);
+          try {
+            const response = await fetch(generatedImage);
+            const blob = await response.blob();
+            const existingImageFile = new File([blob], "existing-image.png", {
+              type: blob.type || "image/png",
+            });
+            form.append("imageFiles", existingImageFile);
+            fileCount++;
+            console.log("Compose: Added generatedImage from history/url");
+          } catch (err) {
+            console.error("Compose: Failed to fetch generatedImage:", err);
+          }
         }
       }
+      console.log("Compose: Total image files:", fileCount);
 
       const resp = await fetch("/api/gemini/edit", {
         method: "POST",
@@ -1097,8 +1108,8 @@ const VeoStudioContent: React.FC = () => {
                 onChange={onPickMultipleImages}
               />
 
-              {/* Compose mode initial state when no generated image */}
-              {mode === "compose-image" && !generatedImage && (
+              {/* Compose mode upload area - always visible in compose mode */}
+              {mode === "compose-image" && (
                 <div className="w-full mt-8 flex justify-center">
                   <div className="max-w-3xl">
                     <div className="text-center text-slate-600 mb-6">
