@@ -17,8 +17,8 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Gemini API Studio",
-  description: "A quickstart for the Gemini API with Veo 3",
+  title: "PhotoAIG",
+  description: "AI-Powered Image & Video Studio",
   icons: {
     icon: "/imgs/gemini_icon.svg",
   },

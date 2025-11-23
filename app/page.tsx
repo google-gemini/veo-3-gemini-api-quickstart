@@ -16,6 +16,7 @@ import AlbumComposerControls from "@/components/ui/AlbumComposerControls";
 import { ImagePreviewProvider, useImagePreview } from "@/context/ImagePreviewContext";
 import Composer from "@/components/ui/Composer"; // Keeping this if it's needed for the sidebar wrapper, though the JSX seems to use specific controls.
 import LoginButton from "@/components/auth/LoginButton";
+import DynamicHeading from "@/components/ui/DynamicHeading";
 
 type VeoOperationName = string | null;
 
@@ -1021,12 +1022,14 @@ const VeoStudioContent: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <div className="absolute top-4 right-4 z-50">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
+        <DynamicHeading className="text-2xl md:text-3xl" />
         <LoginButton />
       </div>
       {/* Main content area */}
       <div
-        className={`flex flex-col items-center justify-center min-h-screen pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
+        className={`flex flex-col items-center justify-center min-h-screen pt-24 pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
           } ${(mode === "edit-image" ||
             mode === "compose-image" ||
             mode === "compose-album")
