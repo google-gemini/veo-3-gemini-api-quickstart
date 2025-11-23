@@ -33,6 +33,7 @@ interface AlbumItem {
   label: string;
   image: string;
   prompt: string;
+  selected?: boolean;
 }
 
 interface HistoryItem {
@@ -438,10 +439,14 @@ const VeoStudioContent: React.FC = () => {
       if (!resp.ok) {
         const json = await resp.json();
         console.error('Save API failed:', json);
-        // Optional: alert('Failed to save image to gallery: ' + (json.error || resp.statusText));
+        return null;
       }
+
+      const json = await resp.json();
+      return json.image;
     } catch (e) {
       console.error('Failed to save to gallery:', e);
+      return null;
     }
   };
 
@@ -470,8 +475,9 @@ const VeoStudioContent: React.FC = () => {
       if (json?.image?.imageBytes) {
         const dataUrl = `data:${json.image.mimeType};base64,${json.image.imageBytes}`;
         setGeneratedImage(dataUrl);
+        const tempId = Date.now().toString();
         setHistory((prev) => [{
-          id: Date.now().toString(),
+          id: tempId,
           imageUrl: dataUrl,
           timestamp: Date.now(),
           folderId: selectedFolder === 'default' ? null : selectedFolder,
@@ -479,8 +485,14 @@ const VeoStudioContent: React.FC = () => {
           mode: "create-image"
         }, ...prev]);
 
-        // Save to DB
-        saveToGallery(dataUrl, imagePrompt);
+        // Save to DB and update ID
+        saveToGallery(dataUrl, imagePrompt).then(savedImage => {
+          if (savedImage) {
+            setHistory(prev => prev.map(item =>
+              item.id === tempId ? { ...item, id: savedImage.id } : item
+            ));
+          }
+        });
       } else if (json?.error) {
         console.error("Imagen API returned error:", json.error);
         throw new Error(json.error);
@@ -580,8 +592,9 @@ const VeoStudioContent: React.FC = () => {
       if (json?.image?.imageBytes) {
         const dataUrl = `data:${json.image.mimeType};base64,${json.image.imageBytes}`;
         setGeneratedImage(dataUrl);
+        const tempId = Date.now().toString();
         setHistory((prev) => [{
-          id: Date.now().toString(),
+          id: tempId,
           imageUrl: dataUrl,
           timestamp: Date.now(),
           folderId: selectedFolder === 'default' ? null : selectedFolder,
@@ -589,8 +602,14 @@ const VeoStudioContent: React.FC = () => {
           mode: "edit-image"
         }, ...prev]);
 
-        // Save to DB
-        saveToGallery(dataUrl, editPrompt);
+        // Save to DB and update ID
+        saveToGallery(dataUrl, editPrompt).then(savedImage => {
+          if (savedImage) {
+            setHistory(prev => prev.map(item =>
+              item.id === tempId ? { ...item, id: savedImage.id } : item
+            ));
+          }
+        });
         dispatchCreditUpdate();
       } else if (json?.error) {
         console.error("Gemini edit API returned error:", json.error);
@@ -663,8 +682,9 @@ const VeoStudioContent: React.FC = () => {
       if (json?.image?.imageBytes) {
         const dataUrl = `data:${json.image.mimeType};base64,${json.image.imageBytes}`;
         setGeneratedImage(dataUrl);
+        const tempId = Date.now().toString();
         setHistory((prev) => [{
-          id: Date.now().toString(),
+          id: tempId,
           imageUrl: dataUrl,
           timestamp: Date.now(),
           folderId: selectedFolder === 'default' ? null : selectedFolder,
@@ -672,8 +692,14 @@ const VeoStudioContent: React.FC = () => {
           mode: "compose-image"
         }, ...prev]);
 
-        // Save to DB
-        saveToGallery(dataUrl, composePrompt);
+        // Save to DB and update ID
+        saveToGallery(dataUrl, composePrompt).then(savedImage => {
+          if (savedImage) {
+            setHistory(prev => prev.map(item =>
+              item.id === tempId ? { ...item, id: savedImage.id } : item
+            ));
+          }
+        });
         dispatchCreditUpdate();
       } else if (json?.error) {
         console.error("Gemini compose API returned error:", json.error);
@@ -717,8 +743,9 @@ const VeoStudioContent: React.FC = () => {
         if (json?.image?.imageBytes) {
           const dataUrl = `data:${json.image.mimeType};base64,${json.image.imageBytes}`;
           setAlbumImages(prev => [...prev, dataUrl]);
+          const tempId = Date.now().toString();
           setHistory((prev) => [{
-            id: Date.now().toString(),
+            id: tempId,
             imageUrl: dataUrl,
             timestamp: Date.now(),
             folderId: selectedFolder === 'default' ? null : selectedFolder,
@@ -726,8 +753,14 @@ const VeoStudioContent: React.FC = () => {
             mode: "compose-album"
           }, ...prev]);
 
-          // Save to DB
-          saveToGallery(dataUrl, item.prompt);
+          // Save to DB and update ID
+          saveToGallery(dataUrl, item.prompt).then(savedImage => {
+            if (savedImage) {
+              setHistory(prev => prev.map(h =>
+                h.id === tempId ? { ...h, id: savedImage.id } : h
+              ));
+            }
+          });
           dispatchCreditUpdate();
         }
       } catch (e) {

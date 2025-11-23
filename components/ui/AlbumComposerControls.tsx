@@ -8,6 +8,7 @@ interface AlbumItem {
     label: string;
     image: string;
     prompt: string;
+    selected?: boolean;
 }
 
 interface AlbumSample {
@@ -50,7 +51,7 @@ export default function AlbumComposerControls({
     }, []);
 
     useEffect(() => {
-        onAlbumItemsChange(items.filter(p => p.prompt.trim() !== ""));
+        onAlbumItemsChange(items.filter(p => p.prompt.trim() !== "" && p.selected !== false));
     }, [items, onAlbumItemsChange]);
 
     useEffect(() => {
@@ -71,8 +72,8 @@ export default function AlbumComposerControls({
         } else {
             setSelectedSampleId(sample.id);
             onThemeSelect(sample.image);
-            // Load items from the album
-            setItems(sample.images);
+            // Load items from the album with selected=true by default
+            setItems(sample.images.map(img => ({ ...img, selected: true })));
         }
     };
 
@@ -85,7 +86,7 @@ export default function AlbumComposerControls({
     };
 
     const handleAddPrompt = () => {
-        setItems([...items, { id: Date.now().toString(), label: "Custom", image: "", prompt: "" }]);
+        setItems([...items, { id: Date.now().toString(), label: "Custom", image: "", prompt: "", selected: true }]);
     };
 
     const handleRemovePrompt = (index: number) => {
@@ -97,6 +98,12 @@ export default function AlbumComposerControls({
     const handlePromptChange = (index: number, value: string) => {
         const newItems = [...items];
         newItems[index] = { ...newItems[index], prompt: value };
+        setItems(newItems);
+    };
+
+    const handleSelectionChange = (index: number, checked: boolean) => {
+        const newItems = [...items];
+        newItems[index] = { ...newItems[index], selected: checked };
         setItems(newItems);
     };
 
@@ -225,6 +232,14 @@ export default function AlbumComposerControls({
                     <div className="space-y-2">
                         {items.map((item, index) => (
                             <div key={index} className="flex gap-2 items-start">
+                                <div className="pt-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={item.selected !== false}
+                                        onChange={(e) => handleSelectionChange(index, e.target.checked)}
+                                        className="cursor-pointer"
+                                    />
+                                </div>
                                 {item.image && (
                                     <div className="w-8 h-8 relative rounded overflow-hidden shrink-0 mt-1 border border-white/20">
                                         <Image src={item.image} alt="Style" fill className="object-cover" />
@@ -235,7 +250,7 @@ export default function AlbumComposerControls({
                                     value={item.prompt}
                                     onChange={(e) => handlePromptChange(index, e.target.value)}
                                     placeholder={`Prompt ${index + 1}...`}
-                                    className="flex-1 text-xs p-2 rounded-md border border-white/20 bg-white/40 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                    className={`flex-1 text-xs p-2 rounded-md border border-white/20 bg-white/40 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 ${item.selected === false ? "opacity-50" : ""}`}
                                 />
                                 {items.length > 1 && (
                                     <button
