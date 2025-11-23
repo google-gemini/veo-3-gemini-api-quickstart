@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2 } from "lucide-react";
+import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2, Folder } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
@@ -85,6 +85,7 @@ const VeoStudioContent: React.FC = () => {
   const [selectedFolder, setSelectedFolder] = useState<string>('default');
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [openFolderDropdown, setOpenFolderDropdown] = useState<string | null>(null);
 
   const [operationName, setOperationName] = useState<VeoOperationName>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -135,6 +136,123 @@ const VeoStudioContent: React.FC = () => {
       }
     };
   }, [imageFile]);
+
+  // Fetch history and folders on mount/login
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase/client');
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        console.log('Fetching history for user:', user?.id);
+
+        if (user) {
+          // Fetch folders
+          const foldersResp = await fetch('/api/user/folders');
+          if (foldersResp.ok) {
+            const foldersData = await foldersResp.json();
+            console.log('Folders received:', foldersData);
+            if (foldersData.folders) {
+              setFolders([
+                { id: 'default', name: 'All Images', color: 'blue' },
+                ...foldersData.folders
+              ]);
+            }
+          }
+
+          // Fetch history
+          const resp = await fetch('/api/user/history?limit=50');
+          console.log('History API response status:', resp.status);
+
+          if (resp.ok) {
+            const data = await resp.json();
+            console.log('History data received:', data);
+
+            if (data.history && data.history.length > 0) {
+              setHistory(prev => {
+                const existingIds = new Set(prev.map(h => h.id));
+                const newItems = data.history.filter((h: HistoryItem) => !existingIds.has(h.id));
+                const merged = [...newItems, ...prev].sort((a, b) => b.timestamp - a.timestamp);
+                console.log('Setting history with', merged.length, 'items');
+                return merged;
+              });
+            } else {
+              console.log('No history items found');
+            }
+          } else {
+            console.error('History API failed:', resp.status, resp.statusText);
+          }
+        } else {
+          console.log('No user logged in, skipping history fetch');
+        }
+      } catch (e) {
+        console.error("Failed to fetch history:", e);
+      }
+    };
+
+    fetchHistory();
+
+    // Listen for auth changes to re-fetch history
+    const setupAuthListener = async () => {
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event);
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          fetchHistory();
+        } else if (event === 'SIGNED_OUT') {
+          setHistory([]);
+          setFolders([{ id: 'default', name: 'All Images', color: 'blue' }]);
+        }
+      });
+      return subscription;
+    };
+
+    const subPromise = setupAuthListener();
+    return () => {
+      subPromise.then(sub => sub.unsubscribe());
+    };
+  }, []);
+
+  // Create folder function
+  const createFolder = async (name: string, color: string = 'blue') => {
+    try {
+      const resp = await fetch('/api/user/folders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, color })
+      });
+
+      if (resp.ok) {
+        const data = await resp.json();
+        setFolders(prev => [...prev, data.folder]);
+        return data.folder;
+      }
+    } catch (e) {
+      console.error('Failed to create folder:', e);
+    }
+  };
+
+  // Assign image to folder function
+  const assignImageToFolder = async (imageId: string, folderId: string | null) => {
+    try {
+      const resp = await fetch('/api/images/folder', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageId, folderId })
+      });
+
+      if (resp.ok) {
+        // Update local state
+        setHistory(prev => prev.map(h =>
+          h.id === imageId ? { ...h, folderId } : h
+        ));
+      }
+    } catch (e) {
+      console.error('Failed to assign folder:', e);
+    }
+  };
 
   const modelLabel = useMemo(() => {
     const cleaned = selectedModel
@@ -1155,13 +1273,9 @@ const VeoStudioContent: React.FC = () => {
                     onChange={(e) => setNewFolderName(e.target.value)}
                     placeholder="Folder name"
                     className="flex-1 px-2 py-1 text-xs border rounded dark:bg-slate-800 dark:border-slate-600"
-                    onKeyDown={(e) => {
+                    onKeyDown={async (e) => {
                       if (e.key === 'Enter' && newFolderName.trim()) {
-                        setFolders(prev => [...prev, {
-                          id: Date.now().toString(),
-                          name: newFolderName,
-                          color: 'blue'
-                        }]);
+                        await createFolder(newFolderName);
                         setNewFolderName('');
                         setIsCreatingFolder(false);
                       } else if (e.key === 'Escape') {
@@ -1195,19 +1309,6 @@ const VeoStudioContent: React.FC = () => {
                         }
                       }
                     }}
-                    onContextMenu={(e) => {
-                      e.preventDefault();
-                      // Show folder assignment menu
-                      const targetFolder = window.prompt('Move to folder (enter folder name):');
-                      if (targetFolder) {
-                        const folder = folders.find(f => f.name.toLowerCase() === targetFolder.toLowerCase());
-                        if (folder) {
-                          setHistory(prev => prev.map(h =>
-                            h.id === item.id ? { ...h, folderId: folder.id === 'default' ? null : folder.id } : h
-                          ));
-                        }
-                      }
-                    }}
                   >
                     <Image
                       src={item.imageUrl}
@@ -1218,6 +1319,54 @@ const VeoStudioContent: React.FC = () => {
                     {generatedImage === item.imageUrl && (
                       <div className="absolute inset-0 ring-2 ring-inset ring-blue-500 rounded-lg" />
                     )}
+
+                    {/* Folder icon with dropdown */}
+                    <div className="absolute top-1 left-1 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenFolderDropdown(openFolderDropdown === item.id ? null : item.id);
+                        }}
+                        className="p-1 bg-black/50 hover:bg-blue-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all"
+                        title="Move to folder"
+                      >
+                        <Folder className="w-3 h-3" />
+                      </button>
+
+                      {/* Dropdown menu */}
+                      {openFolderDropdown === item.id && (
+                        <div className="absolute top-8 left-0 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 min-w-[120px] py-1 z-20">
+                          {folders.filter(f => f.id !== 'default').map((folder) => (
+                            <button
+                              key={folder.id}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const targetFolderId = folder.id === 'default' ? null : folder.id;
+                                await assignImageToFolder(item.id, targetFolderId);
+                                setOpenFolderDropdown(null);
+                              }}
+                              className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ${item.folderId === folder.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+                                }`}
+                            >
+                              {folder.name}
+                            </button>
+                          ))}
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              await assignImageToFolder(item.id, null);
+                              setOpenFolderDropdown(null);
+                            }}
+                            className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors border-t border-gray-200 dark:border-slate-700 ${!item.folderId ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+                              }`}
+                          >
+                            No Folder
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Delete button */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1325,7 +1474,7 @@ const VeoStudioContent: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
