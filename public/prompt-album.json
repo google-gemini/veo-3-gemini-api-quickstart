@@ -7,19 +7,19 @@
             {
                 "id": "sample1",
                 "label": "Shikara on Dal Lake",
-                "image": "/compositionsamples/sample1.png",
-                "prompt": "Tamil couple in a shikara on Dal Lake surrounded by snow-covered mountains, cozy winter outfits, early morning mist, cinematic lighting, reflection in water. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+                "image": "/compositionsamples/sample11.png",
+                "prompt": "couple in a shikara on Dal Lake surrounded by snow-covered mountains, cozy winter outfits, early morning mist, cinematic lighting, reflection in water. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Snowfall Close-Up",
-                "image": "/compositionsamples/sample2.png",
-                "prompt": "Ultra close-up portrait of Tamil couple smiling under gentle snowfall, snowflakes visible on hair, soft natural light, cinematic depth-of-field. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
+                "image": "/compositionsamples/sample21.png",
+                "prompt": "Ultra close-up portrait of  couple smiling under gentle snowfall, snowflakes visible on hair, soft natural light, cinematic depth-of-field. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Pahalgam Walk",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple walking hand-in-hand in snow-covered valley of Pahalgam, misty air, joyful moment, romantic editorial tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -74,19 +74,19 @@
             {
                 "id": "sample1",
                 "label": "Walking on Shoreline",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Couple walking hand-in-hand on golden beach at sunset, waves splashing softly, bride\u00e2\u20ac\u2122s dress flowing, cinematic romance. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Sand Writing Moment",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride and groom kneeling on sand writing their initials, laughing naturally, sea breeze effect. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Beach Swing Fun",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample13.png",
                 "prompt": "Bride on beach swing, groom pushing gently, background of turquoise sea and palm trees, warm daylight tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -141,31 +141,31 @@
             {
                 "id": "sample1",
                 "label": "Taj Reflection Pool",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Bride and groom posing near reflection pool of Taj Mahal, sunrise glow, soft mist, elegant traditional attire. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Marble Stairs Pose",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride sitting gracefully on Taj marble steps, groom leaning near, symmetrical architecture, natural daylight. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Taj Silhouette",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple in silhouette in front of Taj Mahal during golden hour, romantic framing, cinematic bokeh. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample4",
                 "label": "Traditional Attire",
-                "image": "/compositionsamples/sample4.png",
+                "image": "/compositionsamples/sample41.png",
                 "prompt": "Bride in red lehenga and groom in ivory sherwani at Taj entrance, Mughal architecture behind, regal tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample5",
                 "label": "Taj Garden Walk",
-                "image": "/compositionsamples/sample5.png",
+                "image": "/compositionsamples/sample51.png",
                 "prompt": "Couple walking hand-in-hand through Taj garden path, symmetrical trees, soft morning haze. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -208,19 +208,19 @@
             {
                 "id": "sample1",
                 "label": "Eiffel Tower Kiss",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Bride and groom kissing near Eiffel Tower at sunset, elegant gown, soft Parisian light. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Seine River Walk",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Couple walking beside Seine River, holding hands, vintage street lights, romantic tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Cafe Moment",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple sitting at Paris cafe terrace, coffee cups in hand, candid smiles, warm morning light. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -275,19 +275,19 @@
             {
                 "id": "sample1",
                 "label": "Hawa Mahal Balcony",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Bride and groom in royal traditional attire posing at Hawa Mahal balcony, pink sandstone glow, detailed architecture behind, regal romantic style. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Amber Fort Stairs",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride and groom walking down Amber Fort sandstone staircase, sunlight casting royal shadows, cinematic historic tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Elephant Entrance",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple posing beside decorated royal elephant at Amber Fort, traditional Rajasthani backdrop, festive vibrant colours. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -342,19 +342,19 @@
             {
                 "id": "sample1",
                 "label": "Yacht Front Pose",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Couple standing at front of luxury yacht in Maldives, turquoise ocean, wind blowing gently, cinematic elite vibe. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Overwater Villa Walk",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample12.png",
                 "prompt": "Bride and groom walking on wooden bridge to overwater villa, crystal clear sea below, tropical romance. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Beach Hammock",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple relaxing together on white beach hammock, coconut trees behind, soft daylight, peaceful love moment. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -409,19 +409,19 @@
             {
                 "id": "sample1",
                 "label": "Misty Forest Walk",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Couple walking inside dense misty forest, tall evergreen trees, fairytale ambience, magical cinematic tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Wooden Bridge Shot",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride and groom standing on old wooden forest bridge, soft morning haze, earthy colors. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Swing Between Trees",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Bride on rustic rope swing tied to tall trees, groom giving gentle push, dreamy romantic frame. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -476,19 +476,19 @@
             {
                 "id": "sample1",
                 "label": "Sand Dune Walk",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Couple walking on golden Dubai dunes at sunset, long shadows, warm cinematic tones. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Camel Ride Romance",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride and groom on decorated camel, desert sunset behind, Arabian theme, rich cultural ambience. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Desert Car Shot",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple posing beside white luxury SUV parked in desert, flowing outfits, elite lifestyle feel. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -543,19 +543,19 @@
             {
                 "id": "sample1",
                 "label": "Houseboat Deck",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Bride and groom posing on wooden Kerala houseboat deck, calm backwaters, coconut trees around. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Canoe Ride",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Couple in traditional canoe, water lilies around, serene soft green ambience. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Palm Forest Path",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple walking through lush palm grove, filtered sunlight, tropical warm tones. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
@@ -610,19 +610,19 @@
             {
                 "id": "sample1",
                 "label": "Temple Entrance",
-                "image": "/compositionsamples/sample1.png",
+                "image": "/compositionsamples/sample11.png",
                 "prompt": "Couple standing at ancient Tamil temple entrance with tall gopuram behind, traditional attire, divine calm. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample2",
                 "label": "Temple Pillar Corridor",
-                "image": "/compositionsamples/sample2.png",
+                "image": "/compositionsamples/sample21.png",
                 "prompt": "Bride and groom walking inside stone pillar corridor, soft golden sunlight entering sideways. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {
                 "id": "sample3",
                 "label": "Oil Lamp Ambience",
-                "image": "/compositionsamples/sample3.png",
+                "image": "/compositionsamples/sample31.png",
                 "prompt": "Couple near rows of glowing oil lamps, warm soft light on faces, peaceful devotional tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact."
             },
             {

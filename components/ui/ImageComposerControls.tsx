@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, UserCheck, Lightbulb, Type, Image as ImageIcon, X, Maximize2 } from "lucide-react";
+import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, UserCheck, Lightbulb, Type, Image as ImageIcon, X, Maximize2, Search } from "lucide-react";
 import Image from "next/image";
 import { useImagePreview } from "@/context/ImagePreviewContext";
 
@@ -55,6 +55,7 @@ export default function ImageComposerControls({
     // Samples
     const [samples, setSamples] = useState<SamplePrompt[]>([]);
     const [selectedSampleId, setSelectedSampleId] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Fetch samples on mount
     useEffect(() => {
@@ -181,38 +182,54 @@ export default function ImageComposerControls({
                                 <ImageIcon className="w-3.5 h-3.5" />
                                 <span>Inspiration</span>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                {samples.map((sample) => (
-                                    <div
-                                        key={sample.id}
-                                        onClick={() => handleSampleSelect(sample)}
-                                        className={`flex items-center gap-3 p-2 rounded-lg border transition-all group cursor-pointer ${selectedSampleId === sample.id
-                                            ? "bg-indigo-500/10 border-indigo-500 ring-1 ring-indigo-500"
-                                            : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30"
-                                            }`}
-                                    >
+                            <div className="relative mb-2">
+                                <Search className="absolute left-2 top-2 w-3.5 h-3.5 text-slate-400" />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Search inspiration..."
+                                    className="w-full pl-8 pr-2 py-1.5 text-xs border border-white/10 rounded-md bg-black/20 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                                {samples
+                                    .filter(s =>
+                                        !searchQuery ||
+                                        s.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                        s.prompt.toLowerCase().includes(searchQuery.toLowerCase())
+                                    )
+                                    .map((sample) => (
                                         <div
-                                            className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-slate-800 group/image"
-                                            onClick={(e) => handleOpenPreview(e, sample.image)}
+                                            key={sample.id}
+                                            onClick={() => handleSampleSelect(sample)}
+                                            className={`flex items-center gap-3 p-2 rounded-lg border transition-all group cursor-pointer ${selectedSampleId === sample.id
+                                                ? "bg-indigo-500/10 border-indigo-500 ring-1 ring-indigo-500"
+                                                : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30"
+                                                }`}
                                         >
-                                            <Image
-                                                src={sample.image}
-                                                alt={sample.label}
-                                                fill
-                                                className="object-cover transition-transform group-hover/image:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors flex items-center justify-center">
-                                                <Maximize2 className="w-4 h-4 text-white opacity-0 group-hover/image:opacity-100 transition-opacity drop-shadow-md" />
+                                            <div
+                                                className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-slate-800 group/image"
+                                                onClick={(e) => handleOpenPreview(e, sample.image)}
+                                            >
+                                                <Image
+                                                    src={sample.image}
+                                                    alt={sample.label}
+                                                    fill
+                                                    className="object-cover transition-transform group-hover/image:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors flex items-center justify-center">
+                                                    <Maximize2 className="w-4 h-4 text-white opacity-0 group-hover/image:opacity-100 transition-opacity drop-shadow-md" />
+                                                </div>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="text-xs font-medium truncate">{sample.label}</div>
+                                                <div className="text-[10px] opacity-60 line-clamp-2 leading-tight mt-0.5">
+                                                    {sample.prompt}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="text-xs font-medium truncate">{sample.label}</div>
-                                            <div className="text-[10px] opacity-60 line-clamp-2 leading-tight mt-0.5">
-                                                {sample.prompt}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                         </div>
                     )}

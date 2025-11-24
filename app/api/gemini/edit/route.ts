@@ -20,6 +20,7 @@ export async function POST(req: Request) {
 
     const form = await req.formData();
     const prompt = (form.get("prompt") as string) || "";
+    const model = (form.get("model") as string) || "gemini-2.5-flash-image-preview";
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
@@ -40,8 +41,10 @@ export async function POST(req: Request) {
       where: { id: user.id }
     })
 
-    if (!profile || profile.credits < 1) {
-      return NextResponse.json({ error: "Insufficient credits" }, { status: 403 })
+    const cost = model.includes("gemini-3-pro") ? 3 : 1;
+
+    if (!profile || profile.credits < cost) {
+      return NextResponse.json({ error: `Insufficient credits. Required: ${cost}, Available: ${profile?.credits || 0}` }, { status: 403 })
     }
 
     // Handle multiple image files
@@ -124,7 +127,7 @@ export async function POST(req: Request) {
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-image-preview",
+      model: model,
       contents: [
         {
           parts: contents
@@ -135,7 +138,7 @@ export async function POST(req: Request) {
     // Deduct credit on success
     await prisma.userProfile.update({
       where: { id: user.id },
-      data: { credits: { decrement: 1 } }
+      data: { credits: { decrement: cost } }
     })
 
     // Process the response to extract the image

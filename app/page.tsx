@@ -60,6 +60,20 @@ const VeoStudioContent: React.FC = () => {
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [selectedModel, setSelectedModel] = useState("veo-3.0-generate-001");
 
+  // Ensure selectedModel matches the current mode
+  useEffect(() => {
+    if (mode === "create-video") {
+      if (!selectedModel.includes("veo")) {
+        setSelectedModel("veo-3.0-generate-001");
+      }
+    } else {
+      // Image modes
+      if (selectedModel.includes("veo")) {
+        setSelectedModel("gemini-2.5-flash-image-preview");
+      }
+    }
+  }, [mode]);
+
   // Image generation prompts
   const [imagePrompt, setImagePrompt] = useState("");
   const [editPrompt, setEditPrompt] = useState("");
@@ -99,21 +113,7 @@ const VeoStudioContent: React.FC = () => {
   const trimmedUrlRef = useRef<string | null>(null);
   const originalVideoUrlRef = useRef<string | null>(null);
 
-  // Update selected model when mode changes
-  useEffect(() => {
-    if (mode === "create-video") {
-      setSelectedModel("veo-3.0-generate-001");
-    } else if (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") {
-      setSelectedModel("gemini-2.5-flash-image-preview");
-    } else if (mode === "create-image") {
-      if (
-        !selectedModel.includes("gemini") &&
-        !selectedModel.includes("imagen")
-      ) {
-        setSelectedModel("gemini-2.5-flash-image-preview");
-      }
-    }
-  }, [mode, selectedModel]);
+
 
   // Debug multipleImageFiles state
   useEffect(() => {
@@ -516,7 +516,7 @@ const VeoStudioContent: React.FC = () => {
       const resp = await fetch("/api/gemini/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: imagePrompt }),
+        body: JSON.stringify({ prompt: imagePrompt, model: selectedModel }),
       });
 
       if (!resp.ok) {
@@ -564,6 +564,7 @@ const VeoStudioContent: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", editPrompt);
+      form.append("model", selectedModel);
 
       if (imageFile) {
         form.append("imageFile", imageFile);
@@ -632,6 +633,7 @@ const VeoStudioContent: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", composePrompt);
+      form.append("model", selectedModel);
       console.log("Compose: Prompt:", composePrompt);
 
       let fileCount = 0;
@@ -727,6 +729,7 @@ const VeoStudioContent: React.FC = () => {
       try {
         const form = new FormData();
         form.append("prompt", item.prompt);
+        form.append("model", selectedModel);
         form.append("imageFiles", albumSourceImage);
 
         const resp = await fetch("/api/gemini/edit", {
@@ -1543,35 +1546,29 @@ const VeoStudioContent: React.FC = () => {
         )
       }
 
-      {/* Bottom bar controls */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200 dark:border-slate-800 p-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Composer
-              mode={mode}
-              setMode={setMode}
-              prompt={prompt}
-              setPrompt={setPrompt}
-              imagePrompt={imagePrompt}
-              setImagePrompt={setImagePrompt}
-              startGeneration={startGeneration}
-              isGenerating={isLoadingUI}
-              canStart={canStart}
-              resetAll={resetAll}
-              downloadImage={downloadImage}
-              hasGeneratedImage={!!generatedImage}
-              hasVideoUrl={!!videoUrl}
-              selectedModel={selectedModel}
-              setSelectedModel={setSelectedModel}
-              editPrompt={editPrompt}
-              setEditPrompt={setEditPrompt}
-              composePrompt={composePrompt}
-              setComposePrompt={setComposePrompt}
-              geminiBusy={geminiBusy}
-            />
-          </div>
-        </div>
-      </div>
+      {/* Composer controls */}
+      <Composer
+        mode={mode}
+        setMode={setMode}
+        prompt={prompt}
+        setPrompt={setPrompt}
+        imagePrompt={imagePrompt}
+        setImagePrompt={setImagePrompt}
+        startGeneration={startGeneration}
+        isGenerating={isLoadingUI}
+        canStart={canStart}
+        resetAll={resetAll}
+        downloadImage={downloadImage}
+        hasGeneratedImage={!!generatedImage}
+        hasVideoUrl={!!videoUrl}
+        selectedModel={selectedModel}
+        setSelectedModel={setSelectedModel}
+        editPrompt={editPrompt}
+        setEditPrompt={setEditPrompt}
+        composePrompt={composePrompt}
+        setComposePrompt={setComposePrompt}
+        geminiBusy={geminiBusy}
+      />
     </div >
   );
 };

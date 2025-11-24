@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image as ImageIcon, Maximize2, Plus, Trash2, Play, RotateCcw, Upload } from "lucide-react";
+import { Image as ImageIcon, Maximize2, Plus, Trash2, Play, RotateCcw, Upload, Search } from "lucide-react";
 import Image from "next/image";
 import { useImagePreview } from "@/context/ImagePreviewContext";
 
@@ -41,6 +41,7 @@ export default function AlbumComposerControls({
     const [items, setItems] = useState<AlbumItem[]>([]);
     const [sourceImage, setSourceImage] = useState<File | null>(null);
     const [sourceImageUrl, setSourceImageUrl] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Fetch samples on mount
     useEffect(() => {
@@ -178,34 +179,49 @@ export default function AlbumComposerControls({
                         <ImageIcon className="w-3.5 h-3.5" />
                         <span>Select Album Style</span>
                     </div>
+                    <div className="relative mb-2">
+                        <Search className="absolute left-2 top-2 w-3.5 h-3.5 text-slate-400" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search styles..."
+                            className="w-full pl-8 pr-2 py-1.5 text-xs border border-white/10 rounded-md bg-black/20 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
+                    </div>
                     {samples.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-2">
-                            {samples.map((sample) => (
-                                <div
-                                    key={sample.id}
-                                    onClick={() => handleSampleSelect(sample)}
-                                    className={`relative aspect-square rounded-lg overflow-hidden border cursor-pointer group ${selectedSampleId === sample.id
-                                        ? "ring-2 ring-indigo-500 border-transparent"
-                                        : "border-white/10 hover:border-white/30"
-                                        }`}
-                                >
-                                    <Image
-                                        src={sample.image}
-                                        alt={sample.label}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                        <Maximize2
-                                            className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md absolute top-2 right-2"
-                                            onClick={(e) => handleOpenPreview(e, sample.image)}
+                        <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                            {samples
+                                .filter(s =>
+                                    !searchQuery ||
+                                    s.label.toLowerCase().includes(searchQuery.toLowerCase())
+                                )
+                                .map((sample) => (
+                                    <div
+                                        key={sample.id}
+                                        onClick={() => handleSampleSelect(sample)}
+                                        className={`relative aspect-square rounded-lg overflow-hidden border cursor-pointer group ${selectedSampleId === sample.id
+                                            ? "ring-2 ring-indigo-500 border-transparent"
+                                            : "border-white/10 hover:border-white/30"
+                                            }`}
+                                    >
+                                        <Image
+                                            src={sample.image}
+                                            alt={sample.label}
+                                            fill
+                                            className="object-cover"
                                         />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                            <Maximize2
+                                                className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md absolute top-2 right-2"
+                                                onClick={(e) => handleOpenPreview(e, sample.image)}
+                                            />
+                                        </div>
+                                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-1 text-[10px] text-white truncate">
+                                            {sample.label}
+                                        </div>
                                     </div>
-                                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-1 text-[10px] text-white truncate">
-                                        {sample.label}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     ) : (
                         <div className="text-xs opacity-50">Loading albums...</div>
