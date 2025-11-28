@@ -3,7 +3,7 @@
 import React from "react";
 import {
   RotateCcw,
-  Image,
+  Image as ImageIcon,
   Edit,
   Palette,
   Video,
@@ -265,7 +265,7 @@ const Composer: React.FC<ComposerProps> = ({
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
                   }`}
               >
-                <Image className="w-4 h-4" aria-hidden="true" />
+                <ImageIcon className="w-4 h-4" aria-hidden="true" />
                 {getTabText("create-image")}
               </button>
             </TooltipTrigger>
@@ -337,7 +337,7 @@ const Composer: React.FC<ComposerProps> = ({
                     : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
                   }`}
               >
-                <Image className="w-4 h-4" />
+                <ImageIcon className="w-4 h-4" />
                 {getTabText("compose-album")}
               </button>
             </TooltipTrigger>

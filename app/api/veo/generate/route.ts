@@ -87,7 +87,7 @@ export async function POST(req: Request) {
   } catch (error: unknown) {
     console.error("Error starting Veo generation:", error instanceof Error ? error.message : String(error));
     if (error && typeof error === 'object' && 'response' in error) {
-      console.error("Veo API Error Response:", JSON.stringify((error as any).response, null, 2));
+      console.error("Veo API Error Response:", JSON.stringify(error.response, null, 2));
     }
     return NextResponse.json(
       { error: "Failed to start generation" },
