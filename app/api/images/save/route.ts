@@ -85,8 +85,8 @@ export async function POST(request: Request) {
         console.log('Prisma save successful:', imageRecord)
 
         return NextResponse.json({ success: true, image: imageRecord })
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Save API Critical error:', error)
-        return NextResponse.json({ error: `Internal Server Error: ${error.message}` }, { status: 500 })
+        return NextResponse.json({ error: `Internal Server Error: ${error instanceof Error ? error.message : String(error)}` }, { status: 500 })
     }
 }

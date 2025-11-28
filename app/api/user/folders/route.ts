@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 
 // GET - Fetch all folders for the user
-export async function GET(request: Request) {
+export async function GET() {
     try {
         const supabase = await createClient()
         const { data: { user } } = await supabase.auth.getUser()

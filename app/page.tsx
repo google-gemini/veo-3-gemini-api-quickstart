@@ -72,7 +72,7 @@ const VeoStudioContent: React.FC = () => {
         setSelectedModel("gemini-2.5-flash-image-preview");
       }
     }
-  }, [mode]);
+  }, [mode, selectedModel]);
 
   // Image generation prompts
   const [imagePrompt, setImagePrompt] = useState("");
@@ -200,7 +200,7 @@ const VeoStudioContent: React.FC = () => {
     const setupAuthListener = async () => {
       const { createClient } = await import('@/lib/supabase/client');
       const supabase = createClient();
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
         console.log('Auth state changed:', event);
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           fetchHistory();
@@ -498,9 +498,9 @@ const VeoStudioContent: React.FC = () => {
         console.error("Imagen API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error in generateWithImagen:", e);
-      alert(`Failed to generate image: ${e.message}`);
+      alert(`Failed to generate image: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       console.log("Resetting Imagen busy state");
       setImagenBusy(false);
@@ -547,14 +547,14 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error in generateWithGemini:", e);
-      alert(`Failed to generate image: ${e.message}`);
+      alert(`Failed to generate image: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       console.log("Resetting Gemini busy state");
       setGeminiBusy(false);
     }
-  }, [imagePrompt, selectedFolder]);
+  }, [imagePrompt, selectedFolder, selectedModel]);
 
   // Gemini image edit helper
   const editWithGemini = useCallback(async () => {
@@ -617,14 +617,14 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini edit API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error in editWithGemini:", e);
-      alert(`Failed to edit image: ${e.message}`);
+      alert(`Failed to edit image: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       console.log("Resetting Gemini busy state after edit");
       setGeminiBusy(false);
     }
-  }, [editPrompt, imageFile, generatedImage, selectedFolder]);
+  }, [editPrompt, imageFile, generatedImage, selectedFolder, selectedModel]);
 
   // Gemini image compose helper
   const composeWithGemini = useCallback(async (isRetry = false) => {
@@ -708,14 +708,14 @@ const VeoStudioContent: React.FC = () => {
         console.error("Gemini compose API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error in composeWithGemini:", e);
-      alert(`Failed to compose images: ${e.message}`);
+      alert(`Failed to compose images: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       console.log("Resetting Gemini busy state after compose");
       setGeminiBusy(false);
     }
-  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedFolder]);
+  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedFolder, selectedModel]);
 
   const generateAlbum = useCallback(async () => {
     if (!albumSourceImage || albumItems.length === 0) return;
@@ -772,7 +772,7 @@ const VeoStudioContent: React.FC = () => {
       }
     }
     setIsGeneratingAlbum(false);
-  }, [albumItems, albumSourceImage, selectedFolder]);
+  }, [albumItems, albumSourceImage, selectedFolder, selectedModel]);
 
   const startGeneration = useCallback(async (isRetry = false) => {
     if (!canStart) return;
@@ -813,10 +813,10 @@ const VeoStudioContent: React.FC = () => {
         const json = await resp.json();
         setOperationName(json?.name || null);
         if (json?.name) dispatchCreditUpdate();
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error(e);
         setIsGenerating(false);
-        alert(e.message);
+        alert(e instanceof Error ? e.message : String(e));
       }
     } else if (mode === "create-image") {
       if (selectedModel.includes("imagen")) {

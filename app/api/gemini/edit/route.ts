@@ -168,10 +168,10 @@ export async function POST(req: Request) {
         mimeType: responseMimeType,
       },
     });
-  } catch (error: any) {
-    console.error("Error editing image with Gemini:", error?.message || error);
-    if (error?.response) {
-      console.error("Gemini API Error Response:", JSON.stringify(error.response, null, 2));
+  } catch (error: unknown) {
+    console.error("Error editing image with Gemini:", error instanceof Error ? error.message : String(error));
+    if (error && typeof error === 'object' && 'response' in error) {
+      console.error("Gemini API Error Response:", JSON.stringify((error as any).response, null, 2));
     }
     return NextResponse.json(
       { error: "Failed to edit image" },

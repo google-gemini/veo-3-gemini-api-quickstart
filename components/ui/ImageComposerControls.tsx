@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, UserCheck, Lightbulb, Type, Image as ImageIcon, X, Maximize2, Search } from "lucide-react";
+import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, UserCheck, Lightbulb, Type, Image as ImageIcon, Maximize2, Search } from "lucide-react";
 import Image from "next/image";
 import { useImagePreview } from "@/context/ImagePreviewContext";
 

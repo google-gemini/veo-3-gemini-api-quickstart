@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Book, Trash2, Plus, X, Check, Search } from "lucide-react";
-import { usePromptLibrary, SavedPrompt } from "@/hooks/usePromptLibrary";
+import { usePromptLibrary } from "@/hooks/usePromptLibrary";
 
 interface PromptLibraryProps {
     onSelectPrompt: (text: string) => void;

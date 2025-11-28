@@ -32,8 +32,8 @@ export async function DELETE(request: Request) {
         }
 
         return NextResponse.json({ success: true })
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Delete API error:', error)
-        return NextResponse.json({ error: `Internal Server Error: ${error.message}` }, { status: 500 })
+        return NextResponse.json({ error: `Internal Server Error: ${error instanceof Error ? error.message : String(error)}` }, { status: 500 })
     }
 }
