@@ -29,6 +29,7 @@ COPY . .
 
 RUN \
   export DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" && \
+  export GEMINI_API_KEY="dummy_key_for_build" && \
   if [ -f yarn.lock ]; then npx prisma generate && yarn run build; \
   elif [ -f package-lock.json ]; then npx prisma generate && npm run build; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && npx prisma generate && pnpm run build; \
