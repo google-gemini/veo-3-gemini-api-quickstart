@@ -28,9 +28,9 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  if [ -f yarn.lock ]; then npx prisma generate && yarn run build; \
+  elif [ -f package-lock.json ]; then npx prisma generate && npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && npx prisma generate && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
