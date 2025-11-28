@@ -28,6 +28,7 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN \
+  export DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" && \
   if [ -f yarn.lock ]; then npx prisma generate && yarn run build; \
   elif [ -f package-lock.json ]; then npx prisma generate && npm run build; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && npx prisma generate && pnpm run build; \
