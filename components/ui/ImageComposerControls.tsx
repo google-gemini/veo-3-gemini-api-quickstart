@@ -11,6 +11,7 @@ interface ImageComposerControlsProps {
     onGenerate?: () => void;
     isGenerating?: boolean;
     canGenerate?: boolean;
+    onSampleSelect?: (sample: SamplePrompt | null) => void;
 }
 
 const COMPOSITION_STYLES = [
@@ -32,6 +33,13 @@ interface SamplePrompt {
     label: string;
     image: string;
     prompt: string;
+    alias?: string;
+}
+
+interface PromptGroup {
+    id: string;
+    label: string;
+    items: SamplePrompt[];
 }
 
 export default function ImageComposerControls({
@@ -40,6 +48,7 @@ export default function ImageComposerControls({
     onGenerate,
     isGenerating = false,
     canGenerate = false,
+    onSampleSelect,
 }: ImageComposerControlsProps) {
     const { openPreview } = useImagePreview();
     const [compositionStyle, setCompositionStyle] = useState("");
@@ -53,15 +62,26 @@ export default function ImageComposerControls({
     const [textIntegration, setTextIntegration] = useState("");
 
     // Samples
-    const [samples, setSamples] = useState<SamplePrompt[]>([]);
+    const [promptGroups, setPromptGroups] = useState<PromptGroup[]>([]);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
     const [selectedSampleId, setSelectedSampleId] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+
+    // Derived samples based on selected group
+    const samples = selectedGroupId
+        ? promptGroups.find(g => g.id === selectedGroupId)?.items || []
+        : [];
 
     // Fetch samples on mount
     useEffect(() => {
         fetch("/prompt.json")
             .then(res => res.json())
-            .then(data => setSamples(data))
+            .then((data: PromptGroup[]) => {
+                setPromptGroups(data);
+                if (data.length > 0) {
+                    setSelectedGroupId(data[0].id);
+                }
+            })
             .catch(err => console.error("Failed to load prompts:", err));
     }, []);
 
@@ -73,7 +93,7 @@ export default function ImageComposerControls({
         if (selectedSampleId) {
             const sample = samples.find(s => s.id === selectedSampleId);
             if (sample) {
-                parts.push(sample.prompt);
+                parts.push(sample.alias || sample.prompt);
             }
         } else {
             // Otherwise start with composition style
@@ -134,13 +154,16 @@ export default function ImageComposerControls({
         setMatchLighting(false);
         setTextIntegration("");
         setSelectedSampleId(null);
+        onSampleSelect?.(null);
     };
 
     const handleSampleSelect = (sample: SamplePrompt) => {
         if (selectedSampleId === sample.id) {
             setSelectedSampleId(null); // Deselect
+            onSampleSelect?.(null);
         } else {
             setSelectedSampleId(sample.id);
+            onSampleSelect?.(sample);
         }
     };
 
@@ -182,6 +205,24 @@ export default function ImageComposerControls({
                                 <ImageIcon className="w-3.5 h-3.5" />
                                 <span>Inspiration</span>
                             </div>
+
+                            {/* Group Selector */}
+                            {promptGroups.length > 0 && (
+                                <div className="flex gap-1 mb-2 overflow-x-auto pb-1 no-scrollbar">
+                                    {promptGroups.map(group => (
+                                        <button
+                                            key={group.id}
+                                            onClick={() => setSelectedGroupId(group.id)}
+                                            className={`px-2 py-1 text-[10px] rounded-full whitespace-nowrap transition-colors ${selectedGroupId === group.id
+                                                ? "bg-indigo-500 text-white"
+                                                : "bg-white/10 text-slate-400 hover:bg-white/20"
+                                                }`}
+                                        >
+                                            {group.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                             <div className="relative mb-2">
                                 <Search className="absolute left-2 top-2 w-3.5 h-3.5 text-slate-400" />
                                 <input
@@ -225,7 +266,7 @@ export default function ImageComposerControls({
                                             <div className="flex-1 min-w-0">
                                                 <div className="text-xs font-medium truncate">{sample.label}</div>
                                                 <div className="text-[10px] opacity-60 line-clamp-2 leading-tight mt-0.5">
-                                                    {sample.prompt}
+                                                    {sample.alias || sample.prompt}
                                                 </div>
                                             </div>
                                         </div>
@@ -248,6 +289,7 @@ export default function ImageComposerControls({
                                     key={s.value}
                                     onClick={() => {
                                         setSelectedSampleId(null); // Switching base mode clears sample
+                                        onSampleSelect?.(null);
                                         setCompositionStyle(s.value);
                                     }}
                                     className={`text-xs py-2 px-3 rounded-md border text-left transition-all ${compositionStyle === s.value && !selectedSampleId

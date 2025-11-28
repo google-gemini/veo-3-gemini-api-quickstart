@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Sun, Contrast, Thermometer, Palette, RotateCcw, Eraser, Image as ImageIcon, Wand2 } from "lucide-react";
+import { Sun, Contrast, Thermometer, Palette, RotateCcw, Eraser, Image as ImageIcon, Wand2, Sparkles } from "lucide-react";
 
 import { PromptLibrary } from "@/components/ui/PromptLibrary";
 
@@ -23,6 +23,20 @@ const STYLES = [
     { value: "watercolor", label: "Watercolor" },
 ];
 
+interface SamplePrompt {
+    id: string;
+    label: string;
+    image: string;
+    prompt: string;
+    alias?: string;
+}
+
+interface PromptGroup {
+    id: string;
+    label: string;
+    items: SamplePrompt[];
+}
+
 export default function PhotoEditorControls({
     onPromptChange,
     className = "",
@@ -39,6 +53,23 @@ export default function PhotoEditorControls({
     const [backgroundAction, setBackgroundAction] = useState<string | null>(null);
     const [removalAction, setRemovalAction] = useState<string | null>(null);
     const [enhancementAction, setEnhancementAction] = useState<string | null>(null);
+
+    // Face Cleanup state
+    const [faceCleanupPrompts, setFaceCleanupPrompts] = useState<SamplePrompt[]>([]);
+    const [cleanupAction, setCleanupAction] = useState<string | null>(null);
+
+    // Fetch cleanup prompts
+    useEffect(() => {
+        fetch("/prompt.json")
+            .then(res => res.json())
+            .then((data: PromptGroup[]) => {
+                const cleanupGroup = data.find(g => g.id === "Face_Cleanup");
+                if (cleanupGroup) {
+                    setFaceCleanupPrompts(cleanupGroup.items);
+                }
+            })
+            .catch(err => console.error("Failed to load prompts:", err));
+    }, []);
 
     // Generate prompt whenever values change
     useEffect(() => {
@@ -96,6 +127,14 @@ export default function PhotoEditorControls({
             parts.push("make the image high resolution, sharp details, 4k");
         }
 
+        // Face Cleanup Actions
+        if (cleanupAction) {
+            const selectedCleanup = faceCleanupPrompts.find(p => p.id === cleanupAction);
+            if (selectedCleanup) {
+                parts.push(selectedCleanup.prompt);
+            }
+        }
+
         // Base instruction if nothing selected, or combine parts
         const prompt =
             parts.length > 0
@@ -103,7 +142,7 @@ export default function PhotoEditorControls({
                 : "";
 
         onPromptChange(prompt);
-    }, [brightness, contrast, warmth, style, backgroundAction, removalAction, enhancementAction, onPromptChange]);
+    }, [brightness, contrast, warmth, style, backgroundAction, removalAction, enhancementAction, cleanupAction, faceCleanupPrompts, onPromptChange]);
 
     const handleReset = () => {
         setBrightness(0);
@@ -113,6 +152,7 @@ export default function PhotoEditorControls({
         setBackgroundAction(null);
         setRemovalAction(null);
         setEnhancementAction(null);
+        setCleanupAction(null);
     };
 
     return (
@@ -284,6 +324,30 @@ export default function PhotoEditorControls({
                             </button>
                         </div>
                     </div>
+
+                    {/* Face Cleanup */}
+                    {faceCleanupPrompts.length > 0 && (
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-1.5 text-xs mb-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>Face Cleanup</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                {faceCleanupPrompts.map((prompt) => (
+                                    <button
+                                        key={prompt.id}
+                                        onClick={() => setCleanupAction(cleanupAction === prompt.id ? null : prompt.id)}
+                                        className={`text-xs py-2 px-3 rounded-md border transition-all text-left ${cleanupAction === prompt.id
+                                            ? "bg-indigo-500 text-white border-indigo-600"
+                                            : "bg-white/40 border-transparent hover:bg-white/60 text-slate-700"
+                                            }`}
+                                    >
+                                        {prompt.alias || prompt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="h-px bg-white/10" />

@@ -11,7 +11,7 @@ export default function DynamicHeading({ className = "" }: { className?: string 
             {/* Text */}
             <h1 className="relative font-bold tracking-tight">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 animate-gradient bg-300% transition-all duration-300 group-hover:tracking-wide">
-                    PhotoAIG
+                    Photoverse
                 </span>
             </h1>
         </div>

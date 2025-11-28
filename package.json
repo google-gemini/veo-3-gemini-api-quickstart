@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.8.0",
+    "@google/generative-ai": "^0.24.1",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "@radix-ui/react-tooltip": "^1.2.8",
