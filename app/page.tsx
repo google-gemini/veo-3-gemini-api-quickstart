@@ -34,6 +34,8 @@ interface AlbumItem {
   label: string;
   image: string;
   prompt: string;
+  alias?: string;
+  originalPrompt?: string;
   selected?: boolean;
 }
 
@@ -44,6 +46,14 @@ interface HistoryItem {
   folderId: string | null;
   prompt?: string;
   mode?: StudioMode;
+}
+
+interface SamplePrompt {
+  id: string;
+  label: string;
+  image: string;
+  prompt: string;
+  alias?: string;
 }
 
 interface Folder {
@@ -91,7 +101,11 @@ const VeoStudioContent: React.FC = () => {
   const [albumThemeImage, setAlbumThemeImage] = useState<string>("");
   const [albumSourceImage, setAlbumSourceImage] = useState<File | null>(null);
   const [albumImages, setAlbumImages] = useState<string[]>([]);
+
   const [isGeneratingAlbum, setIsGeneratingAlbum] = useState(false);
+
+  // Selected sample for enhancement context
+  const [selectedSample, setSelectedSample] = useState<SamplePrompt | null>(null);
 
   // History and Folders state
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -410,7 +424,10 @@ const VeoStudioContent: React.FC = () => {
     setAlbumThemeImage("");
     setAlbumSourceImage(null);
     setAlbumImages([]);
+    setAlbumSourceImage(null);
+    setAlbumImages([]);
     setIsGeneratingAlbum(false);
+    setSelectedSample(null);
     if (videoBlobRef.current) {
       URL.revokeObjectURL(URL.createObjectURL(videoBlobRef.current));
       videoBlobRef.current = null;
@@ -632,9 +649,33 @@ const VeoStudioContent: React.FC = () => {
     setGeneratedImage(null);
     try {
       const form = new FormData();
-      form.append("prompt", composePrompt);
+
+      // Enhance prompt logic
+      let finalPrompt = composePrompt;
+      try {
+        const enhanceResp = await fetch("/api/gemini/enhance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: composePrompt,
+            originalPrompt: selectedSample?.prompt || null,
+            task: "image_generation"
+          }),
+        });
+        if (enhanceResp.ok) {
+          const enhanceJson = await enhanceResp.json();
+          if (enhanceJson.enhancedPrompt) {
+            finalPrompt = enhanceJson.enhancedPrompt;
+            console.log("Enhanced Prompt:", finalPrompt);
+          }
+        }
+      } catch (err) {
+        console.error("Enhancement failed, using original prompt", err);
+      }
+
+      form.append("prompt", finalPrompt);
       form.append("model", selectedModel);
-      console.log("Compose: Prompt:", composePrompt);
+      console.log("Compose: Prompt:", finalPrompt);
 
       let fileCount = 0;
       for (const file of multipleImageFiles) {
@@ -715,7 +756,7 @@ const VeoStudioContent: React.FC = () => {
       console.log("Resetting Gemini busy state after compose");
       setGeminiBusy(false);
     }
-  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedFolder, selectedModel]);
+  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedFolder, selectedModel, selectedSample]);
 
   const generateAlbum = useCallback(async () => {
     if (!albumSourceImage || albumItems.length === 0) return;
@@ -727,8 +768,35 @@ const VeoStudioContent: React.FC = () => {
       if (!item.prompt.trim()) continue;
 
       try {
+        // Enhance prompt for album item
+        let finalPrompt = item.prompt;
+        // Check if item has originalPrompt (added in AlbumComposerControls)
+        // We need to cast item to any or update interface if we want type safety, 
+        // but for now we access it dynamically or assume it's there.
+        const originalPrompt = item.originalPrompt;
+
+        try {
+          const enhanceResp = await fetch("/api/gemini/enhance", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: item.prompt,
+              originalPrompt: originalPrompt || null,
+              task: "album_creation"
+            }),
+          });
+          if (enhanceResp.ok) {
+            const enhanceJson = await enhanceResp.json();
+            if (enhanceJson.enhancedPrompt) {
+              finalPrompt = enhanceJson.enhancedPrompt;
+            }
+          }
+        } catch (err) {
+          console.error("Album prompt enhancement failed", err);
+        }
+
         const form = new FormData();
-        form.append("prompt", item.prompt);
+        form.append("prompt", finalPrompt);
         form.append("model", selectedModel);
         form.append("imageFiles", albumSourceImage);
 
@@ -1509,6 +1577,7 @@ const VeoStudioContent: React.FC = () => {
                   onGenerate={startGeneration}
                   isGenerating={isLoadingUI}
                   canGenerate={canStart}
+                  onSampleSelect={setSelectedSample}
                 />
               )}
               {mode === "compose-album" && (

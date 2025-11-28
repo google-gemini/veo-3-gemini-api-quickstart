@@ -17,7 +17,7 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "PhotoAIG",
+  title: "Photoverse",
   description: "AI-Powered Image & Video Studio",
   icons: {
     icon: "/imgs/gemini_icon.svg",

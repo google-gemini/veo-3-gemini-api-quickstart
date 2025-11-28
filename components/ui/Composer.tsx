@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PromptLibrary } from "@/components/ui/PromptLibrary";
+import VoiceInput from "@/components/ui/VoiceInput";
 
 type StudioMode =
   | "create-image"
@@ -220,6 +221,20 @@ const Composer: React.FC<ComposerProps> = ({
                 else if (mode === "edit-image") setEditPrompt(text);
                 else if (mode === "compose-image") setComposePrompt(text);
                 else setPrompt(text);
+              }}
+            />
+            <VoiceInput
+              onTranscript={(text) => {
+                const currentPrompt =
+                  mode === "create-image" ? imagePrompt :
+                    mode === "edit-image" ? editPrompt :
+                      mode === "compose-image" ? composePrompt :
+                        prompt;
+                const newPrompt = currentPrompt ? `${currentPrompt} ${text}` : text;
+                if (mode === "create-image") setImagePrompt(newPrompt);
+                else if (mode === "edit-image") setEditPrompt(newPrompt);
+                else if (mode === "compose-image") setComposePrompt(newPrompt);
+                else setPrompt(newPrompt);
               }}
             />
           </div>

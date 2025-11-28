@@ -33,7 +33,7 @@ export default function LoginPage() {
                         <Sparkles className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                        Welcome to PhotoAIG
+                        Welcome to Photoverse
                     </h1>
                     <p className="text-slate-600 dark:text-slate-400">
                         Sign in to start creating amazing AI images.

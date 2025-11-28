@@ -8,6 +8,8 @@ interface AlbumItem {
     label: string;
     image: string;
     prompt: string;
+    alias?: string;
+    originalPrompt?: string;
     selected?: boolean;
 }
 
@@ -74,7 +76,12 @@ export default function AlbumComposerControls({
             setSelectedSampleId(sample.id);
             onThemeSelect(sample.image);
             // Load items from the album with selected=true by default
-            setItems(sample.images.map(img => ({ ...img, selected: true })));
+            setItems(sample.images.map(img => ({
+                ...img,
+                selected: true,
+                originalPrompt: img.prompt,
+                prompt: img.alias || img.prompt // Use alias for display
+            })));
         }
     };
 
