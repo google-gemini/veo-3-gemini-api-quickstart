@@ -19,6 +19,11 @@ RUN \
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Declare build arguments for Next.js public environment variables
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -30,6 +35,8 @@ COPY . .
 RUN \
   export DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" && \
   export GEMINI_API_KEY="dummy_key_for_build" && \
+  export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL}" && \
+  export NEXT_PUBLIC_SUPABASE_ANON_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY}" && \
   if [ -f yarn.lock ]; then npx prisma generate && yarn run build; \
   elif [ -f package-lock.json ]; then npx prisma generate && npm run build; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && npx prisma generate && pnpm run build; \
