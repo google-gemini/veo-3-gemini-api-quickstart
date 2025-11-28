@@ -17,6 +17,8 @@ import { ImagePreviewProvider, useImagePreview } from "@/context/ImagePreviewCon
 import Composer from "@/components/ui/Composer"; // Keeping this if it's needed for the sidebar wrapper, though the JSX seems to use specific controls.
 import LoginButton from "@/components/auth/LoginButton";
 import DynamicHeading from "@/components/ui/DynamicHeading";
+import PricingModal from "@/components/ui/PricingModal";
+import { Plus } from "lucide-react";
 
 type VeoOperationName = string | null;
 
@@ -126,6 +128,8 @@ const VeoStudioContent: React.FC = () => {
 
   const trimmedUrlRef = useRef<string | null>(null);
   const originalVideoUrlRef = useRef<string | null>(null);
+
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
 
 
 
@@ -1096,8 +1100,19 @@ const VeoStudioContent: React.FC = () => {
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
         <DynamicHeading className="text-2xl md:text-3xl" />
-        <LoginButton />
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsPricingOpen(true)}
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors border border-indigo-200 dark:border-indigo-800"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Buy Credits
+          </button>
+          <LoginButton />
+        </div>
       </div>
+
+      <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
       {/* Main content area */}
       <div
         className={`flex flex-col items-center justify-center min-h-screen pt-24 pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
