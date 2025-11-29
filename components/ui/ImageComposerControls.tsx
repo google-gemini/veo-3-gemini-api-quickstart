@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Layers, LayoutGrid, Palette, Wand2, RotateCcw, Grid, Columns, Rows, UserCheck, Lightbulb, Type, Image as ImageIcon, Maximize2, Search } from "lucide-react";
 import Image from "next/image";
 import { useImagePreview } from "@/context/ImagePreviewContext";
@@ -68,9 +68,11 @@ export default function ImageComposerControls({
     const [searchQuery, setSearchQuery] = useState("");
 
     // Derived samples based on selected group
-    const samples = selectedGroupId
-        ? promptGroups.find(g => g.id === selectedGroupId)?.items || []
-        : [];
+    const samples = useMemo(() => {
+        return selectedGroupId
+            ? promptGroups.find(g => g.id === selectedGroupId)?.items || []
+            : [];
+    }, [selectedGroupId, promptGroups]);
 
     // Fetch samples on mount
     useEffect(() => {

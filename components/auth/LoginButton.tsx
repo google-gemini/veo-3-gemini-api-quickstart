@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import CreditDisplay from '@/components/credits/CreditDisplay'
+import Image from 'next/image'
 
 export default function LoginButton() {
     const [loading, setLoading] = useState(false)
@@ -51,11 +52,14 @@ export default function LoginButton() {
             <div className="flex items-center gap-4">
                 <CreditDisplay />
                 <div className="flex items-center gap-2">
-                    {user.user_metadata.avatar_url && (
-                        <img
-                            src={user.user_metadata.avatar_url}
+                    {(user.user_metadata.avatar_url || user.user_metadata.picture) && (
+                        <Image
+                            src={user.user_metadata.avatar_url || user.user_metadata.picture}
                             alt="Avatar"
-                            className="w-8 h-8 rounded-full"
+                            width={32}
+                            height={32}
+                            className="rounded-full border border-slate-200 dark:border-slate-700"
+                            unoptimized
                         />
                     )}
                     <span className="text-sm font-medium hidden sm:block">
