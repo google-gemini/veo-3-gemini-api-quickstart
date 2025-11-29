@@ -56,8 +56,108 @@ Add the following **Repository secrets**:
 2.  Go to the **Actions** tab in GitHub to watch the deployment.
 3.  Once finished, the Cloud Run URL will be displayed in the logs (or find it in GCP Console > Cloud Run).
 
+## 4. Custom Domain Mapping (Optional)
+
+Map your custom domain to the Cloud Run service for a professional URL.
+
+### A. Verify Domain Ownership
+
+Before mapping, you must verify domain ownership with Google:
+
+1. **Go to Google Search Console:**
+   - Visit: https://search.google.com/search-console
+
+2. **Add Your Domain:**
+   - Click "Add Property"
+   - Choose "Domain" (not URL prefix)
+   - Enter your root domain (e.g., `yourdomain.com`)
+
+3. **Verify via DNS TXT Record:**
+   - Google provides a TXT record like: `google-site-verification=abc123...`
+   - Add this to your domain's DNS settings at your registrar:
+     - **Type:** TXT
+     - **Name:** `@` (or root/apex)
+     - **Value:** The verification string from Google
+   - Wait for DNS propagation (5 mins to 24 hours)
+   - Click "Verify" in Search Console
+
+4. **Confirm Verification:**
+   ```bash
+   gcloud domains list-user-verified
+   ```
+
+### B. Create Domain Mapping
+
+Once verified, map your subdomain to Cloud Run:
+
+```bash
+gcloud beta run domain-mappings create \
+  --service=photoaig \
+  --domain=subdomain.yourdomain.com \
+  --region=us-central1
+```
+
+Example:
+```bash
+gcloud beta run domain-mappings create \
+  --service=photoaig \
+  --domain=photoverse.aigniter.in \
+  --region=us-central1
+```
+
+### C. Configure DNS Records
+
+Add the CNAME record provided by Google to your domain registrar:
+
+- **Type:** CNAME
+- **Name:** `subdomain` (e.g., `photoverse`)
+- **Value:** `ghs.googlehosted.com`
+
+Example for `photoverse.aigniter.in`:
+| Type  | Name        | Value                  |
+|-------|-------------|------------------------|
+| CNAME | photoverse  | ghs.googlehosted.com   |
+
+### D. Wait for SSL Certificate
+
+- Google automatically provisions a managed SSL certificate
+- This takes 15 minutes to several hours
+- Check status:
+  ```bash
+  gcloud beta run domain-mappings describe \
+    --domain=subdomain.yourdomain.com \
+    --region=us-central1
+  ```
+
+### E. Update Supabase Redirect URLs
+
+**Critical:** Add your custom domain to Supabase:
+
+1. Go to [Supabase Dashboard](https://app.supabase.com)
+2. Navigate to **Authentication** > **URL Configuration**
+3. Add to **Redirect URLs**:
+   ```
+   https://subdomain.yourdomain.com/auth/callback
+   ```
+
+### F. Verify Domain Mapping
+
+```bash
+# List all domain mappings
+gcloud beta run domain-mappings list --region=us-central1
+
+# Check DNS propagation
+nslookup subdomain.yourdomain.com
+
+# Test the URL
+curl -I https://subdomain.yourdomain.com
+```
+
 ## Important Notes
 
 *   **Supabase Connectivity**: Ensure your Supabase database accepts connections from anywhere (0.0.0.0/0) or configure VPC peering if you want to restrict it. Cloud Run IPs change.
-*   **Redirect URLs**: After deployment, add your Cloud Run URL (e.g., `https://photoaig-xyz.a.run.app`) to your **Supabase Auth Redirect URLs** and Google Cloud Console (if using Google Auth).
-*   **Environment Variables**: If you add more env vars, update the `env_vars` section in `.github/workflows/deploy.yml`.
+*   **Redirect URLs**: After deployment, add your Cloud Run URL (e.g., `https://photoaig-xyz.a.run.app`) **and custom domain** to your **Supabase Auth Redirect URLs** and Google Cloud Console (if using Google Auth).
+*   **Environment Variables**: If you add more env vars, update the `env_vars` section in `.github/workflows/deploy.yml` and rebuild the Docker image.
+*   **NEXT_PUBLIC Variables**: These are baked into the client bundle at build time via Docker build arguments. Changes require a rebuild.
+*   **DNS Propagation**: Can take up to 48 hours, but usually completes within minutes to hours.
+*   **SSL Certificate**: Automatically managed by Google. Check status if your site shows security warnings.
