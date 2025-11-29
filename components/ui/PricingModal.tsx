@@ -5,7 +5,9 @@ import { X, Check, CreditCard, Loader2, Sparkles } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Initialize Stripe outside component to avoid recreation
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+    : null;
 
 interface PricingModalProps {
     isOpen: boolean;
@@ -43,6 +45,11 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     if (!isOpen) return null;
 
     const handlePurchase = async (credits: number, amount: number) => {
+        if (!stripePromise) {
+            alert("Stripe is not configured. Please contact support.");
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await fetch("/api/stripe/checkout", {
@@ -135,8 +142,8 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                     setShowCustom(false);
                                 }}
                                 className={`relative group border-2 rounded-xl p-4 transition-all cursor-pointer ${selectedTier === index && !showCustom
-                                        ? "border-indigo-500 bg-indigo-50/30 dark:bg-indigo-900/10"
-                                        : "border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700"
+                                    ? "border-indigo-500 bg-indigo-50/30 dark:bg-indigo-900/10"
+                                    : "border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700"
                                     }`}
                             >
                                 {tier.popular && (
