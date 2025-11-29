@@ -18,6 +18,7 @@ import Composer from "@/components/ui/Composer"; // Keeping this if it's needed 
 import LoginButton from "@/components/auth/LoginButton";
 import DynamicHeading from "@/components/ui/DynamicHeading";
 import PricingModal from "@/components/ui/PricingModal";
+import HelpMenu from "@/components/ui/HelpMenu";
 
 
 type VeoOperationName = string | null;
@@ -1124,6 +1125,7 @@ const VeoStudioContent: React.FC = () => {
               <SlidersHorizontal className="w-5 h-5" />
             </button>
           )}
+          <HelpMenu />
           <LoginButton onOpenPricing={() => setIsPricingOpen(true)} />
         </div>
       </div>
@@ -1419,7 +1421,7 @@ const VeoStudioContent: React.FC = () => {
         history.length > 0 && (
           <div className={`
             fixed z-50 flex flex-col pointer-events-none transition-transform duration-300 ease-in-out
-            md:translate-x-0 md:flex md:left-2 md:top-20 md:bottom-28 md:w-44 lg:left-6 lg:top-24 lg:bottom-32 lg:w-48
+            md:translate-x-0 md:flex md:left-2 md:top-16 md:bottom-20 md:w-44 lg:left-6 lg:top-20 lg:bottom-24 lg:w-48
             ${isLeftSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             top-0 left-0 bottom-0 w-64 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent shadow-2xl md:shadow-none p-4 md:p-0
           `}>
@@ -1616,7 +1618,7 @@ const VeoStudioContent: React.FC = () => {
         (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") && (
           <div className={`
             fixed z-50 flex flex-col pointer-events-none transition-transform duration-300 ease-in-out
-            md:translate-x-0 md:flex md:right-4 md:top-20 md:bottom-28 md:w-76 lg:right-6 lg:top-24 lg:bottom-32 lg:w-80
+            md:translate-x-0 md:flex md:right-4 md:top-16 md:bottom-20 md:w-76 lg:right-6 lg:top-20 lg:bottom-24 lg:w-80
             ${isRightSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
             top-0 right-0 bottom-0 w-80 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent shadow-2xl md:shadow-none p-4 md:p-0
           `}>
