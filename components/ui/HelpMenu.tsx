@@ -2,8 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
-import { HelpCircle, FileText, Phone, Mail, Globe, ExternalLink, X, Book } from "lucide-react";
+import { HelpCircle, Phone, Mail, Globe, ExternalLink, X, Book } from "lucide-react";
 import SupportModal from "./SupportModal";
 import UserGuideModal from "./UserGuideModal";
 
@@ -33,7 +32,7 @@ export default function HelpMenu() {
                 <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 flex justify-between items-start">
                     <div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white">Contact Us</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">We're here to help!</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">We&apos;re here to help!</p>
                     </div>
                     <button
                         onClick={() => setShowContact(false)}

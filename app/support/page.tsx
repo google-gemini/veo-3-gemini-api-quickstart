@@ -56,7 +56,7 @@ export default function SupportPage() {
                             Support Center
                         </h1>
                         <p className="text-slate-600 dark:text-slate-400">
-                            Have a question or need help? Send us a message and we'll get back to you as soon as possible.
+                            Have a question or need help? Send us a message and we&apos;ll get back to you as soon as possible.
                         </p>
                     </div>
 
