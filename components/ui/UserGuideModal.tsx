@@ -243,8 +243,8 @@ export default function UserGuideModal({ isOpen, onClose }: UserGuideModalProps)
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">File Management</h2>
                             </div>
                             <ul className="space-y-3 text-slate-600 dark:text-slate-300 text-sm">
-                                <li><strong>Creating Folders:</strong> Click "+ New Folder" and enter a folder name</li>
-                                <li><strong>Browsing History:</strong> View "All Images" or click custom folders to see their contents</li>
+                                <li><strong>Creating Folders:</strong> Click &quot;+ New Folder&quot; and enter a folder name</li>
+                                <li><strong>Browsing History:</strong> View &quot;All Images&quot; or click custom folders to see their contents</li>
                                 <li><strong>Search:</strong> Use the search bar to find specific projects</li>
                                 <li><strong>Image Actions:</strong> Move images to folders or delete them</li>
                             </ul>
