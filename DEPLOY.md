@@ -49,6 +49,9 @@ Add the following **Repository secrets**:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase Anon Key |
 | `DATABASE_URL` | Your Supabase Connection String (Transaction Mode recommended for serverless) |
 | `GEMINI_API_KEY` | Your Google Gemini API Key |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Your Stripe Publishable Key (starts with `pk_`) |
+| `STRIPE_SECRET_KEY` | Your Stripe Secret Key (starts with `sk_`) |
+| `STRIPE_WEBHOOK_SECRET` | Your Stripe Webhook Secret (starts with `whsec_`) |
 
 ## 3. Deploy
 
