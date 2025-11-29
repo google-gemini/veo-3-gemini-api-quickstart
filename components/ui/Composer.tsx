@@ -134,251 +134,250 @@ const Composer: React.FC<ComposerProps> = ({
   };
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20 w-[min(100%,48rem)] px-4">
-      <div className="relative text-slate-900/80 backdrop-blur-sm bg-white/30 px-3 py-1 rounded-lg ">
-        {hasGeneratedImage && !hasVideoUrl && (
-          <div className="absolute -top-12 right-0 z-10">
-            <button
-              onClick={downloadImage}
-              className="inline-flex items-center gap-2 bg-white/30 hover:bg-white text-slate-700 py-2 px-4 rounded-lg transition-colors"
-              title="Download Image"
-            >
-              <Download className="w-4 h-4" />
-              <span>Download</span>
-            </button>
-          </div>
-        )}
-        <div className="flex items-center justify-between mb-3">
-          <ModelSelector
-            selectedModel={selectedModel}
-            setSelectedModel={setSelectedModel}
-            mode={mode}
-          />
+    <div className="fixed bottom-2 md:bottom-4 lg:bottom-6 left-1/2 -translate-x-1/2 z-20 w-[calc(100%-1rem)] md:w-[calc(100%-2rem)] max-w-3xl px-2 md:px-4">      <div className="relative text-slate-900/80 backdrop-blur-sm bg-white/30 px-2 md:px-3 py-1 rounded-lg ">
+      {hasGeneratedImage && !hasVideoUrl && (
+        <div className="absolute -top-12 right-0 z-10">
+          <button
+            onClick={downloadImage}
+            className="inline-flex items-center gap-2 bg-white/30 hover:bg-white text-slate-700 py-2 px-4 rounded-lg transition-colors"
+            title="Download Image"
+          >
+            <Download className="w-4 h-4" />
+            <span>Download</span>
+          </button>
         </div>
+      )}
+      <div className="flex items-center justify-between mb-3">
+        <ModelSelector
+          selectedModel={selectedModel}
+          setSelectedModel={setSelectedModel}
+          mode={mode}
+        />
+      </div>
 
-        {mode === "create-video" && (
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Generate a video with text and frames..."
-            className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
-            rows={2}
+      {mode === "create-video" && (
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Generate a video with text and frames..."
+          className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
+          rows={2}
+        />
+      )}
+
+      {mode === "create-image" && (
+        <textarea
+          value={imagePrompt}
+          onChange={(e) => setImagePrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Describe the image to create..."
+          className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
+          rows={2}
+        />
+      )}
+
+      {mode === "edit-image" && (
+        <textarea
+          value={editPrompt}
+          onChange={(e) => setEditPrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Describe how to edit the image..."
+          className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
+          rows={2}
+        />
+      )}
+
+      {mode === "compose-image" && (
+        <textarea
+          value={composePrompt}
+          onChange={(e) => setComposePrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Describe how to combine the images..."
+          className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
+          rows={2}
+        />
+      )}
+
+      <div className="flex items-center justify-between mt-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleReset}
+            className="h-10 w-10 flex items-center justify-center bg-white/50 rounded-full hover:bg-white/70 cursor-pointer touch-manipulation"
+            title="Reset"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
+          <PromptLibrary
+            currentPrompt={
+              mode === "create-image" ? imagePrompt :
+                mode === "edit-image" ? editPrompt :
+                  mode === "compose-image" ? composePrompt :
+                    prompt
+            }
+            onSelectPrompt={(text) => {
+              if (mode === "create-image") setImagePrompt(text);
+              else if (mode === "edit-image") setEditPrompt(text);
+              else if (mode === "compose-image") setComposePrompt(text);
+              else setPrompt(text);
+            }}
           />
-        )}
-
-        {mode === "create-image" && (
-          <textarea
-            value={imagePrompt}
-            onChange={(e) => setImagePrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Describe the image to create..."
-            className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
-            rows={2}
-          />
-        )}
-
-        {mode === "edit-image" && (
-          <textarea
-            value={editPrompt}
-            onChange={(e) => setEditPrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Describe how to edit the image..."
-            className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
-            rows={2}
-          />
-        )}
-
-        {mode === "compose-image" && (
-          <textarea
-            value={composePrompt}
-            onChange={(e) => setComposePrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Describe how to combine the images..."
-            className="w-full bg-transparent focus:outline-none resize-none text-base font-normal placeholder-slate-800/60"
-            rows={2}
-          />
-        )}
-
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleReset}
-              className="h-10 w-10 flex items-center justify-center bg-white/50 rounded-full hover:bg-white/70 cursor-pointer"
-              title="Reset"
-            >
-              <RotateCcw className="w-5 h-5" />
-            </button>
-            <PromptLibrary
-              currentPrompt={
+          <VoiceInput
+            onTranscript={(text) => {
+              const currentPrompt =
                 mode === "create-image" ? imagePrompt :
                   mode === "edit-image" ? editPrompt :
                     mode === "compose-image" ? composePrompt :
-                      prompt
-              }
-              onSelectPrompt={(text) => {
-                if (mode === "create-image") setImagePrompt(text);
-                else if (mode === "edit-image") setEditPrompt(text);
-                else if (mode === "compose-image") setComposePrompt(text);
-                else setPrompt(text);
-              }}
-            />
-            <VoiceInput
-              onTranscript={(text) => {
-                const currentPrompt =
-                  mode === "create-image" ? imagePrompt :
-                    mode === "edit-image" ? editPrompt :
-                      mode === "compose-image" ? composePrompt :
-                        prompt;
-                const newPrompt = currentPrompt ? `${currentPrompt} ${text}` : text;
-                if (mode === "create-image") setImagePrompt(newPrompt);
-                else if (mode === "edit-image") setEditPrompt(newPrompt);
-                else if (mode === "compose-image") setComposePrompt(newPrompt);
-                else setPrompt(newPrompt);
-              }}
-            />
-          </div>
-          <button
-            onClick={startGeneration}
-            disabled={!canStart || isGenerating || geminiBusy}
-            aria-busy={isGenerating || geminiBusy}
-            className={`h-10 w-10 flex items-center justify-center rounded-full text-white transition ${!canStart || isGenerating || geminiBusy
-              ? "bg-white/50 cursor-not-allowed"
-              : "bg-white/50 hover:bg-white/70 cursor-pointer"
-              }`}
-            title={
-              mode === "create-image"
-                ? "Generate Image"
-                : mode === "edit-image"
-                  ? "Edit Image"
-                  : mode === "compose-image"
-                    ? "Compose Image"
-                    : "Generate Video"
-            }
-          >
-            {isGenerating || geminiBusy ? (
-              <div className="w-4 h-4 border-2 border-t-transparent border-black rounded-full animate-spin" />
-            ) : (
-              <Sparkles className="w-5 h-5 text-black" />
-            )}
-          </button>
+                      prompt;
+              const newPrompt = currentPrompt ? `${currentPrompt} ${text}` : text;
+              if (mode === "create-image") setImagePrompt(newPrompt);
+              else if (mode === "edit-image") setEditPrompt(newPrompt);
+              else if (mode === "compose-image") setComposePrompt(newPrompt);
+              else setPrompt(newPrompt);
+            }}
+          />
         </div>
+        <button
+          onClick={startGeneration}
+          disabled={!canStart || isGenerating || geminiBusy}
+          aria-busy={isGenerating || geminiBusy}
+          className={`h-10 w-10 flex items-center justify-center rounded-full text-white transition touch-manipulation ${!canStart || isGenerating || geminiBusy
+            ? "bg-white/50 cursor-not-allowed"
+            : "bg-white/50 hover:bg-white/70 cursor-pointer"
+            }`}
+          title={
+            mode === "create-image"
+              ? "Generate Image"
+              : mode === "edit-image"
+                ? "Edit Image"
+                : mode === "compose-image"
+                  ? "Compose Image"
+                  : "Generate Video"
+          }
+        >
+          {isGenerating || geminiBusy ? (
+            <div className="w-4 h-4 border-2 border-t-transparent border-black rounded-full animate-spin" />
+          ) : (
+            <Sparkles className="w-5 h-5 text-black" />
+          )}
+        </button>
+      </div>
 
-        {/* Mode Badges */}
-        <div className="flex gap-1 mt-3 bg-white/10 rounded-md p-1 border border-white/20">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() =>
-                  !isTabDisabled("create-image") && setMode("create-image")
-                }
-                disabled={isTabDisabled("create-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "create-image"
-                  ? "bg-indigo-400/30 text-slate-900 backdrop-blur-sm"
-                  : isTabDisabled("create-image")
-                    ? "text-slate-400 cursor-not-allowed opacity-50"
-                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                  }`}
-              >
-                <ImageIcon className="w-4 h-4" aria-hidden="true" />
-                {getTabText("create-image")}
-              </button>
-            </TooltipTrigger>
-            {getTabTooltip("create-image") && (
-              <TooltipContent>
-                <p>{getTabTooltip("create-image")}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() =>
-                  !isTabDisabled("edit-image") && setMode("edit-image")
-                }
-                disabled={isTabDisabled("edit-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "edit-image"
-                  ? "bg-blue-400/30 text-slate-900 backdrop-blur-sm"
-                  : isTabDisabled("edit-image")
-                    ? "text-slate-400 cursor-not-allowed opacity-50"
-                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                  }`}
-              >
-                <Edit className="w-4 h-4" />
-                {getTabText("edit-image")}
-              </button>
-            </TooltipTrigger>
-            {getTabTooltip("edit-image") && (
-              <TooltipContent>
-                <p>{getTabTooltip("edit-image")}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() =>
-                  !isTabDisabled("compose-image") && setMode("compose-image")
-                }
-                disabled={isTabDisabled("compose-image")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "compose-image"
-                  ? "bg-green-400/30 text-slate-900 backdrop-blur-sm"
-                  : isTabDisabled("compose-image")
-                    ? "text-slate-400 cursor-not-allowed opacity-50"
-                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                  }`}
-              >
-                <Palette className="w-4 h-4" />
-                {getTabText("compose-image")}
-              </button>
-            </TooltipTrigger>
-            {getTabTooltip("compose-image") && (
-              <TooltipContent>
-                <p>{getTabTooltip("compose-image")}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() =>
-                  !isTabDisabled("compose-album") && setMode("compose-album")
-                }
-                disabled={isTabDisabled("compose-album")}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 ${mode === "compose-album"
-                  ? "bg-pink-400/30 text-slate-900 backdrop-blur-sm"
-                  : isTabDisabled("compose-album")
-                    ? "text-slate-400 cursor-not-allowed opacity-50"
-                    : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
-                  }`}
-              >
-                <ImageIcon className="w-4 h-4" />
-                {getTabText("compose-album")}
-              </button>
-            </TooltipTrigger>
-            {getTabTooltip("compose-album") && (
-              <TooltipContent>
-                <p>{getTabTooltip("compose-album")}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                disabled={true}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition flex-1 bg-gray-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed opacity-60`}
-              >
-                <Video className="w-4 h-4" />
-                {getTabText("create-video")}
-                <Lock className="w-3 h-3 ml-1" />
-              </button>
-            </TooltipTrigger>
+      {/* Mode Badges */}
+      <div className="flex gap-1 mt-3 bg-white/10 rounded-md p-1 border border-white/20">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() =>
+                !isTabDisabled("create-image") && setMode("create-image")
+              }
+              disabled={isTabDisabled("create-image")}
+              className={`flex items-center justify-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm transition flex-1 min-h-[44px] touch-manipulation ${mode === "create-image"
+                ? "bg-indigo-400/30 text-slate-900 backdrop-blur-sm"
+                : isTabDisabled("create-image")
+                  ? "text-slate-400 cursor-not-allowed opacity-50"
+                  : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
+                }`}
+            >
+              <ImageIcon className="w-4 h-4" aria-hidden="true" />
+              <span className="hidden sm:inline">{getTabText("create-image")}</span>
+            </button>
+          </TooltipTrigger>
+          {getTabTooltip("create-image") && (
             <TooltipContent>
-              <p>Create Video (Premium Only)</p>
+              <p>{getTabTooltip("create-image")}</p>
             </TooltipContent>
-          </Tooltip>
-        </div>
-      </div >
+          )}
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() =>
+                !isTabDisabled("edit-image") && setMode("edit-image")
+              }
+              disabled={isTabDisabled("edit-image")}
+              className={`flex items-center justify-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm transition flex-1 min-h-[44px] touch-manipulation ${mode === "edit-image"
+                ? "bg-blue-400/30 text-slate-900 backdrop-blur-sm"
+                : isTabDisabled("edit-image")
+                  ? "text-slate-400 cursor-not-allowed opacity-50"
+                  : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
+                }`}
+            >
+              <Edit className="w-4 h-4" />
+              <span className="hidden sm:inline">{getTabText("edit-image")}</span>
+            </button>
+          </TooltipTrigger>
+          {getTabTooltip("edit-image") && (
+            <TooltipContent>
+              <p>{getTabTooltip("edit-image")}</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() =>
+                !isTabDisabled("compose-image") && setMode("compose-image")
+              }
+              disabled={isTabDisabled("compose-image")}
+              className={`flex items-center justify-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm transition flex-1 min-h-[44px] touch-manipulation ${mode === "compose-image"
+                ? "bg-green-400/30 text-slate-900 backdrop-blur-sm"
+                : isTabDisabled("compose-image")
+                  ? "text-slate-400 cursor-not-allowed opacity-50"
+                  : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
+                }`}
+            >
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline">{getTabText("compose-image")}</span>
+            </button>
+          </TooltipTrigger>
+          {getTabTooltip("compose-image") && (
+            <TooltipContent>
+              <p>{getTabTooltip("compose-image")}</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() =>
+                !isTabDisabled("compose-album") && setMode("compose-album")
+              }
+              disabled={isTabDisabled("compose-album")}
+              className={`flex items-center justify-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm transition flex-1 min-h-[44px] touch-manipulation ${mode === "compose-album"
+                ? "bg-pink-400/30 text-slate-900 backdrop-blur-sm"
+                : isTabDisabled("compose-album")
+                  ? "text-slate-400 cursor-not-allowed opacity-50"
+                  : "text-slate-700 hover:bg-white/30 hover:text-slate-900"
+                }`}
+            >
+              <ImageIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">{getTabText("compose-album")}</span>
+            </button>
+          </TooltipTrigger>
+          {getTabTooltip("compose-album") && (
+            <TooltipContent>
+              <p>{getTabTooltip("compose-album")}</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              disabled={true}
+              className={`flex items-center justify-center gap-2 px-2 sm:px-3 py-2 rounded-md text-sm transition flex-1 min-h-[44px] bg-gray-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed opacity-60 touch-manipulation`}
+            >
+              <Video className="w-4 h-4" />
+              <span className="hidden sm:inline">{getTabText("create-video")}</span>
+              <Lock className="w-3 h-3 ml-1" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Create Video (Premium Only)</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </div >
     </div >
   );
 };

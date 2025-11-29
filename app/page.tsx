@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2, Folder, Search } from "lucide-react";
+import { Upload, Film, Image as ImageIcon, Maximize2, RotateCcw, Trash2, Folder, Search, Menu, SlidersHorizontal, X } from "lucide-react";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import PhotoEditorControls from "@/components/ui/PhotoEditorControls";
 import ImageComposerControls from "@/components/ui/ImageComposerControls";
@@ -18,7 +18,8 @@ import Composer from "@/components/ui/Composer"; // Keeping this if it's needed 
 import LoginButton from "@/components/auth/LoginButton";
 import DynamicHeading from "@/components/ui/DynamicHeading";
 import PricingModal from "@/components/ui/PricingModal";
-import { Plus } from "lucide-react";
+import HelpMenu from "@/components/ui/HelpMenu";
+
 
 type VeoOperationName = string | null;
 
@@ -130,6 +131,8 @@ const VeoStudioContent: React.FC = () => {
   const originalVideoUrlRef = useRef<string | null>(null);
 
   const [isPricingOpen, setIsPricingOpen] = useState(false);
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
 
 
 
@@ -1098,28 +1101,43 @@ const VeoStudioContent: React.FC = () => {
       onDrop={handleDrop}
     >
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
-        <DynamicHeading className="text-2xl md:text-3xl" />
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setIsPricingOpen(true)}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors border border-indigo-200 dark:border-indigo-800"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Buy Credits
-          </button>
-          <LoginButton />
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
+        <div className="flex items-center gap-2 md:gap-0">
+          {/* Mobile Left Sidebar Toggle */}
+          {history.length > 0 && (
+            <button
+              onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
+              className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+          <DynamicHeading className="text-xl md:text-2xl lg:text-3xl" />
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Mobile Right Sidebar Toggle */}
+          {(mode === "edit-image" || mode === "compose-image" || mode === "compose-album") && (
+            <button
+              onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+              className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
+            >
+              <SlidersHorizontal className="w-5 h-5" />
+            </button>
+          )}
+          <HelpMenu />
+          <LoginButton onOpenPricing={() => setIsPricingOpen(true)} />
         </div>
       </div>
 
       <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
       {/* Main content area */}
       <div
-        className={`flex flex-col items-center justify-center min-h-screen pt-24 pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
-          } ${(mode === "edit-image" ||
+        className={`flex flex-col items-center justify-center min-h-screen pt-16 md:pt-20 lg:pt-24 pb-48 md:pb-64 lg:pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "md:pl-48 lg:pl-64" : ""
+          } ${mode === "edit-image" ||
             mode === "compose-image" ||
-            mode === "compose-album")
-            ? "pr-96"
+            mode === "compose-album"
+            ? "md:pr-72 lg:pr-80 xl:pr-96"
             : ""
           }`}
       >
@@ -1186,7 +1204,7 @@ const VeoStudioContent: React.FC = () => {
 
               {mode === "edit-image" && imageFile && uploadedImageUrl && (
                 <div
-                  className="w-full max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
+                  className="w-full max-w-full md:max-w-3xl lg:max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
                   onClick={() => openPreview(uploadedImageUrl)}
                 >
                   <Image
@@ -1312,7 +1330,7 @@ const VeoStudioContent: React.FC = () => {
         {mode === "compose-album" && (
           <div className="w-full max-w-6xl mt-8 pb-32">
             {albumImages.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
                 {albumImages.map((img, idx) => (
                   <div
                     key={idx}
@@ -1350,7 +1368,7 @@ const VeoStudioContent: React.FC = () => {
           !videoUrl &&
           !(mode === "create-video" && isLoadingUI) && (
             <div
-              className="w-full max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
+              className="w-full max-w-full md:max-w-3xl lg:max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
               onClick={() => openPreview(generatedImage)}
             >
               <Image
@@ -1387,11 +1405,33 @@ const VeoStudioContent: React.FC = () => {
           )}
       </div>
 
+      {/* Mobile Sidebar Overlay */}
+      {(isLeftSidebarOpen || isRightSidebarOpen) && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          onClick={() => {
+            setIsLeftSidebarOpen(false);
+            setIsRightSidebarOpen(false);
+          }}
+        />
+      )}
+
       {/* Left side history */}
       {
         history.length > 0 && (
-          <div className="fixed left-6 top-24 bottom-32 z-20 w-48 overflow-hidden flex flex-col pointer-events-none">
-            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+          <div className={`
+            fixed z-50 flex flex-col pointer-events-none transition-transform duration-300 ease-in-out
+            md:translate-x-0 md:flex md:left-2 md:top-16 md:bottom-20 md:w-44 lg:left-6 lg:top-20 lg:bottom-24 lg:w-48
+            ${isLeftSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+            top-0 left-0 bottom-0 w-64 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent shadow-2xl md:shadow-none p-4 md:p-0
+          `}>
+            <div className="md:hidden flex items-center justify-between mb-4 pointer-events-auto px-2">
+              <span className="font-semibold text-lg">History</span>
+              <button onClick={() => setIsLeftSidebarOpen(false)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/20 dark:border-slate-800 md:border-none">
               {/* Search Bar */}
               <div className="mb-2 relative">
                 <Search className="absolute left-2 top-1.5 w-3.5 h-3.5 text-slate-400" />
@@ -1576,8 +1616,19 @@ const VeoStudioContent: React.FC = () => {
       {/* Right side controls */}
       {
         (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") && (
-          <div className="fixed right-6 top-24 bottom-32 z-20 w-80 overflow-hidden flex flex-col pointer-events-none">
-            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar">
+          <div className={`
+            fixed z-50 flex flex-col pointer-events-none transition-transform duration-300 ease-in-out
+            md:translate-x-0 md:flex md:right-4 md:top-16 md:bottom-20 md:w-76 lg:right-6 lg:top-20 lg:bottom-24 lg:w-80
+            ${isRightSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
+            top-0 right-0 bottom-0 w-80 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent shadow-2xl md:shadow-none p-4 md:p-0
+          `}>
+            <div className="md:hidden flex items-center justify-between mb-4 pointer-events-auto px-2">
+              <span className="font-semibold text-lg">Controls</span>
+              <button onClick={() => setIsRightSidebarOpen(false)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/20 dark:border-slate-800 md:border-none">
               {mode === "edit-image" && (
                 <PhotoEditorControls
                   onPromptChange={setEditPrompt}
@@ -1611,11 +1662,11 @@ const VeoStudioContent: React.FC = () => {
 
       {
         videoUrl && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-8">
             <div className="relative w-full max-w-6xl">
               <button
                 onClick={() => setVideoUrl(null)}
-                className="absolute -top-12 right-0 text-white/70 hover:text-white"
+                className="absolute -top-8 md:-top-12 right-0 text-white/70 hover:text-white text-sm md:text-base px-3 py-1.5 md:px-0 md:py-0"
               >
                 Close
               </button>

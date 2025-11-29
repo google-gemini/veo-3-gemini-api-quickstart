@@ -105,7 +105,7 @@
     },
     {
         "id": "Baby_Photoshoot",
-        "label": "Baby / Kid Photoshoot",
+        "label": "Baby Photoshoot",
         "items": [
             {
                 "id": "babyshoot1",
@@ -141,6 +141,82 @@
                 "image": "/compositionsamples/baby-temple.png",
                 "prompt": "Dress the baby/kid in traditional Indian attire and create a warm cultural photoshoot setting. Make sure the baby’s facial features, eyes, skin tone, expression and identity remain unchanged. Enhance colors and details naturally.",
                 "alias": "Traditional Dress Shoot"
+            }
+        ]
+    },
+    {
+        "id": "Passport_Stamp_Photos",
+        "label": "Passport & Stamp Size Photos",
+        "items": [
+            {
+                "id": "ps1",
+                "label": "Passport White BG",
+                "image": "/compositionsamples/ps1.png",
+                "prompt": "Generate a passport-size photo from the given image with a pure white background. Ensure centered head framing, proper lighting, and clean edges. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Passport White BG"
+            },
+            {
+                "id": "ps2",
+                "label": "Passport Light Blue BG",
+                "image": "/compositionsamples/ps2.png",
+                "prompt": "Generate a passport-size photo with a soft light-blue background. Maintain the real identity, skin tone, face structure, eyes, eyebrows, expression and hair exactly as in the original image.",
+                "alias": "Passport Light Blue BG"
+            },
+            {
+                "id": "ps3",
+                "label": "Passport Studio Look",
+                "image": "/compositionsamples/ps3.png",
+                "prompt": "Create a studio-style passport photo with even lighting, smooth background and sharp clarity. Use white or off-white background. Do not change any facial features, identity, eyes, eyebrows, hair or expression.",
+                "alias": "Passport Studio Look"
+            },
+            {
+                "id": "ps4",
+                "label": "Stamp Size White BG",
+                "image": "/compositionsamples/ps4.png",
+                "prompt": "Generate a stamp-size photo from the given image with a plain white background. Ensure the face remains unchanged with original eyes, eyebrows, facial structure, expression and hair.",
+                "alias": "Stamp Size White BG"
+            },
+            {
+                "id": "ps5",
+                "label": "Stamp Size Light Blue BG",
+                "image": "/compositionsamples/ps5.png",
+                "prompt": "Create a stamp-size photo using a light-blue background. Maintain the real person’s identity and facial details without modifying expression, eyes, nose, lips or hair.",
+                "alias": "Stamp Size Light Blue BG"
+            },
+            {
+                "id": "ps6",
+                "label": "8 Photo Collage White BG",
+                "image": "/compositionsamples/ps6.png",
+                "prompt": "Generate an 8-photo for passport-size photo print collage on a pure white background. All 8 photos must be identical and maintain the original identity, facial structure, eyes, eyebrows, expression and hair.",
+                "alias": "8 Photo Collage White BG"
+            },
+            {
+                "id": "ps7",
+                "label": "8 Photo Collage Light Blue BG",
+                "image": "/compositionsamples/ps7.png",
+                "prompt": "Create an 8-photo for passport size photo print using a light-blue background. Each picture should be identical with no changes in the person's face details, identity, eyes, eyebrows, hair and expression.",
+                "alias": "8 Photo Collage Light Blue BG"
+            },
+            {
+                "id": "ps8",
+                "label": "High Clarity Passport",
+                "image": "/compositionsamples/ps8.png",
+                "prompt": "Generate a high-clarity passport photo with sharp details, even lighting and a white background. Keep the original facial features, skin tone, eyes, nose, eyebrows and expression unchanged.",
+                "alias": "High Clarity Passport"
+            },
+            {
+                "id": "ps9",
+                "label": "Formal Passport Photo",
+                "image": "/compositionsamples/ps9.png",
+                "prompt": "Create a formal passport-style photo with a clean background and balanced lighting. Keep the person’s real identity, facial structure, eyes, eyebrows, expression and hair untouched.",
+                "alias": "Formal Passport Photo"
+            },
+            {
+                "id": "ps10",
+                "label": "Official ID Photo",
+                "image": "/compositionsamples/ps10.png",
+                "prompt": "Generate an official ID-style photo with a plain white or light-blue background. Keep the face, identity, eyes, expression, skin tone and facial structure exactly the same as the given image.",
+                "alias": "Official ID Photo"
             }
         ]
     },

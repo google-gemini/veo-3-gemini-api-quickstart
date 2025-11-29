@@ -6,7 +6,7 @@ import { User } from '@supabase/supabase-js'
 import CreditDisplay from '@/components/credits/CreditDisplay'
 import Image from 'next/image'
 
-export default function LoginButton() {
+export default function LoginButton({ onOpenPricing }: { onOpenPricing?: () => void }) {
     const [loading, setLoading] = useState(false)
     const [user, setUser] = useState<User | null>(null)
 
@@ -50,7 +50,7 @@ export default function LoginButton() {
     if (user) {
         return (
             <div className="flex items-center gap-4">
-                <CreditDisplay />
+                <CreditDisplay onOpenPricing={onOpenPricing} />
                 <div className="flex items-center gap-2">
                     {(user.user_metadata.avatar_url || user.user_metadata.picture) && (
                         <Image
