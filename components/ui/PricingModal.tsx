@@ -123,10 +123,10 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                         <CreditCard className="w-6 h-6" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                        Top Up Credits
+                        Credits & Pricing
                     </h2>
                     <p className="text-slate-500 dark:text-slate-400 text-sm">
-                        Choose a package or enter a custom amount
+                        Top up your balance and view usage rates
                     </p>
                 </div>
 
@@ -273,6 +273,46 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                     <p className="text-center text-xs text-slate-400 mt-4">
                         Secure payment via Stripe. Credits never expire.
                     </p>
+
+                    {/* Credit Usage Rates */}
+                    <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+                        <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-indigo-500" />
+                            Credit Usage Rates
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Image Generation</p>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between text-slate-700 dark:text-slate-300 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                        <span>Gemini Flash 2.5</span>
+                                        <span className="font-medium">1 credit</span>
+                                    </div>
+                                    <div className="flex justify-between text-slate-700 dark:text-slate-300 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                        <span>Imagen 4.0</span>
+                                        <span className="font-medium">2 credits</span>
+                                    </div>
+                                    <div className="flex justify-between text-slate-700 dark:text-slate-300 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                        <span>Nano Banana Pro</span>
+                                        <span className="font-medium">3 credits</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Video Generation</p>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between text-slate-700 dark:text-slate-300 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                        <span>Veo 2</span>
+                                        <span className="font-medium">10 credits</span>
+                                    </div>
+                                    <div className="flex justify-between text-slate-700 dark:text-slate-300 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                        <span>Veo 3</span>
+                                        <span className="font-medium">25 credits</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
