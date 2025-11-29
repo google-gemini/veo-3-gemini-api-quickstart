@@ -1094,17 +1094,17 @@ const VeoStudioContent: React.FC = () => {
       onDrop={handleDrop}
     >
       {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
-        <DynamicHeading className="text-2xl md:text-3xl" />
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-white/20 dark:border-slate-800 shadow-sm">
+        <DynamicHeading className="text-xl md:text-2xl lg:text-3xl" />
         <LoginButton />
       </div>
       {/* Main content area */}
       <div
-        className={`flex flex-col items-center justify-center min-h-screen pt-24 pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "pl-64" : ""
-          } ${(mode === "edit-image" ||
+        className={`flex flex-col items-center justify-center min-h-screen pt-16 md:pt-20 lg:pt-24 pb-48 md:pb-64 lg:pb-96 px-4 transition-all duration-300 ${history.length > 0 ? "md:pl-48 lg:pl-64" : ""
+          } ${mode === "edit-image" ||
             mode === "compose-image" ||
-            mode === "compose-album")
-            ? "pr-96"
+            mode === "compose-album"
+            ? "md:pr-72 lg:pr-80 xl:pr-96"
             : ""
           }`}
       >
@@ -1171,7 +1171,7 @@ const VeoStudioContent: React.FC = () => {
 
               {mode === "edit-image" && imageFile && uploadedImageUrl && (
                 <div
-                  className="w-full max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
+                  className="w-full max-w-full md:max-w-3xl lg:max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
                   onClick={() => openPreview(uploadedImageUrl)}
                 >
                   <Image
@@ -1297,7 +1297,7 @@ const VeoStudioContent: React.FC = () => {
         {mode === "compose-album" && (
           <div className="w-full max-w-6xl mt-8 pb-32">
             {albumImages.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
                 {albumImages.map((img, idx) => (
                   <div
                     key={idx}
@@ -1335,7 +1335,7 @@ const VeoStudioContent: React.FC = () => {
           !videoUrl &&
           !(mode === "create-video" && isLoadingUI) && (
             <div
-              className="w-full max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
+              className="w-full max-w-full md:max-w-3xl lg:max-w-4xl aspect-video overflow-hidden rounded-lg border relative mx-auto group cursor-pointer"
               onClick={() => openPreview(generatedImage)}
             >
               <Image
@@ -1375,7 +1375,7 @@ const VeoStudioContent: React.FC = () => {
       {/* Left side history */}
       {
         history.length > 0 && (
-          <div className="fixed left-6 top-24 bottom-32 z-20 w-48 overflow-hidden flex flex-col pointer-events-none">
+          <div className="hidden md:flex fixed left-2 md:left-4 lg:left-6 top-16 md:top-20 lg:top-24 bottom-24 md:bottom-28 lg:bottom-32 z-20 w-40 md:w-44 lg:w-48 overflow-hidden flex-col pointer-events-none">
             <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar flex flex-col gap-2 pb-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
               {/* Search Bar */}
               <div className="mb-2 relative">
@@ -1561,7 +1561,7 @@ const VeoStudioContent: React.FC = () => {
       {/* Right side controls */}
       {
         (mode === "edit-image" || mode === "compose-image" || mode === "compose-album") && (
-          <div className="fixed right-6 top-24 bottom-32 z-20 w-80 overflow-hidden flex flex-col pointer-events-none">
+          <div className="hidden md:flex fixed right-2 md:right-4 lg:right-6 top-16 md:top-20 lg:top-24 bottom-24 md:bottom-28 lg:bottom-32 z-20 w-72 md:w-76 lg:w-80 overflow-hidden flex-col pointer-events-none">
             <div className="pointer-events-auto h-full overflow-y-auto no-scrollbar">
               {mode === "edit-image" && (
                 <PhotoEditorControls
@@ -1596,11 +1596,11 @@ const VeoStudioContent: React.FC = () => {
 
       {
         videoUrl && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-8">
             <div className="relative w-full max-w-6xl">
               <button
                 onClick={() => setVideoUrl(null)}
-                className="absolute -top-12 right-0 text-white/70 hover:text-white"
+                className="absolute -top-8 md:-top-12 right-0 text-white/70 hover:text-white text-sm md:text-base px-3 py-1.5 md:px-0 md:py-0"
               >
                 Close
               </button>
