@@ -24,7 +24,12 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { credits } = body;
+        const { credits, amount } = body;
+
+        // Validate input
+        if (!credits || !amount || credits < 10 || amount < 20) {
+            return NextResponse.json({ error: 'Invalid credits or amount' }, { status: 400 });
+        }
 
         // For this POC, we'll create a price on the fly or use a fixed amount
         // In production, you should use Price IDs from your Stripe Dashboard
@@ -38,7 +43,7 @@ export async function POST(req: Request) {
                             name: `${credits} Credits Package`,
                             description: `Purchase ${credits} credits for Photoverse Studio`,
                         },
-                        unit_amount: 200, // $2.00 in cents
+                        unit_amount: amount, // Amount in cents from frontend
                     },
                     quantity: 1,
                 },
