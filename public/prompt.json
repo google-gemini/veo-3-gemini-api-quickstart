@@ -1,0 +1,264 @@
+[
+    {
+        "id": "wedding",
+        "label": "Wedding",
+        "items": [
+            {
+                "id": "sample1",
+                "label": "Walking hand in hand",
+                "image": "/compositionsamples/sample1.png",
+                "prompt": " walking hand in hand along a beach at sunset, waves gently lapping, bride’s veil trailing in wind, candid joyful moment, wide shot, romantic ambience. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Walking hand in hand"
+            },
+            {
+                "id": "sample2",
+                "label": "Sitting on staircase",
+                "image": "/compositionsamples/sample2.png",
+                "prompt": " sitting on elegant white marble staircase with groom beside her leaning in, natural light from window, soft shadows, intimate and artistic, editorial style. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Sitting on staircase"
+            },
+            {
+                "id": "sample3",
+                "label": "Ancient Tamil",
+                "image": "/compositionsamples/sample3.png",
+                "prompt": "Dress them like Ancient Tamil kingdom sitting in throne.  Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Ancient Tamil"
+            },
+            {
+                "id": "album1_sample1",
+                "label": "Snow Shoot in Kashmir - Shikara on Dal Lake",
+                "image": "/compositionsamples/snow1.png",
+                "prompt": " in a shikara on Dal Lake surrounded by snow-covered mountains, cozy winter outfits, early morning mist, cinematic lighting, reflection in water. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Snow Shoot in Kashmir - Shikara on Dal Lake"
+            },
+            {
+                "id": "album2_sample1",
+                "label": "Beach Pre-Wedding Shoot - Walking on Shoreline",
+                "image": "/compositionsamples/beach1.png",
+                "prompt": " walking hand-in-hand on golden beach at sunset, waves splashing softly, bride’s dress flowing, cinematic romance. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Beach Pre-Wedding Shoot - Walking on Shoreline"
+            },
+            {
+                "id": "album3_sample1",
+                "label": "Taj Mahal Heritage Album - Taj Reflection Pool",
+                "image": "/compositionsamples/taj1.png",
+                "prompt": " posing near reflection pool of Taj Mahal, sunrise glow, soft mist, elegant traditional attire. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Taj Mahal Heritage Album - Taj Reflection Pool"
+            },
+            {
+                "id": "album4_sample1",
+                "label": "Paris Dream Wedding - Eiffel Tower Kiss",
+                "image": "/compositionsamples/paris1.png",
+                "prompt": " kissing near Eiffel Tower at sunset, elegant gown, soft Parisian light. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Paris Dream Wedding - Eiffel Tower Kiss"
+            },
+            {
+                "id": "album5_sample1",
+                "label": "Jaipur Royal Palace Wedding - Hawa Mahal Balcony",
+                "image": "/compositionsamples/jaipur1.png",
+                "prompt": " in royal traditional attire posing at Hawa Mahal balcony, pink sandstone glow, detailed architecture behind, regal romantic style. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Jaipur Royal Palace Wedding - Hawa Mahal Balcony"
+            },
+            {
+                "id": "album6_sample1",
+                "label": "Maldives Yacht \u0026 Beach Romance - Yacht Front Pose",
+                "image": "/compositionsamples/maldiv1.png",
+                "prompt": " standing at front of luxury yacht in Maldives, turquoise ocean, wind blowing gently, cinematic elite vibe. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Maldives Yacht \u0026 Beach Romance - Yacht Front Pose"
+            },
+            {
+                "id": "album7_sample1",
+                "label": "Forest Fairy Tale Shoot - Misty Forest Walk",
+                "image": "/compositionsamples/forest1.png",
+                "prompt": " walking inside dense misty forest, tall evergreen trees, fairytale ambience, magical cinematic tone. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Forest Fairy Tale Shoot - Misty Forest Walk"
+            },
+            {
+                "id": "album8_sample1",
+                "label": "Dubai Desert Majesty - Sand Dune Walk",
+                "image": "/compositionsamples/dubai1.png",
+                "prompt": " walking on golden Dubai dunes at sunset, long shadows, warm cinematic tones. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Dubai Desert Majesty - Sand Dune Walk"
+            },
+            {
+                "id": "album9_sample1",
+                "label": "Kerala Backwater Romance - Houseboat Deck",
+                "image": "/compositionsamples/kerala1.png",
+                "prompt": " posing on wooden Kerala houseboat deck, calm backwaters, coconut trees around. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Kerala Backwater Romance - Houseboat Deck"
+            },
+            {
+                "id": "album10_sample1",
+                "label": "Tamil Temple Divine Shoot - Temple Entrance",
+                "image": "/compositionsamples/temple1.png",
+                "prompt": " standing at ancient Tamil temple entrance with tall gopuram behind, traditional attire, divine calm. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Tamil Temple Divine Shoot - Temple Entrance"
+            },
+            {
+                "id": "sample9",
+                "label": "Ghibli Flower Field",
+                "image": "/compositionsamples/album_ghibli_sample.png",
+                "prompt": " sitting in a vast Ghibli-style flower field, gentle wind moving petals, soft pastel colors, warm lighting like Howl and Sophie’s meadow. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
+                "alias": "Ghibli Flower Field"
+            }
+        ]
+    },
+    {
+        "id": "Baby_Photoshoot",
+        "label": "Baby Photoshoot",
+        "items": [
+            {
+                "id": "babyshoot1",
+                "label": "Cute Studio Portrait",
+                "image": "/compositionsamples/baby-studio.png",
+                "prompt": "Create a cute baby/kid photoshoot portrait with soft studio lighting, pastel background and gentle shadows. Keep the baby’s natural face, skin tone, eyes, expression and identity unchanged. Enhance overall clarity and brightness without altering facial structure.",
+                "alias": "Cute Studio Portrait"
+            },
+            {
+                "id": "babyshoot2",
+                "label": "Fairy Tale Theme",
+                "image": "/compositionsamples/baby-fairytail.png",
+                "prompt": "Generate a fairy-tale themed baby/kid photoshoot scene with magical soft lighting, dreamy colors and gentle ambience. Add subtle fantasy elements around the child while keeping the baby’s face, eyes, skin, expression and identity fully unchanged.",
+                "alias": "Fairy Tale Theme"
+            },
+            {
+                "id": "babyshoot3",
+                "label": "Outdoor Nature Shoot",
+                "image": "/compositionsamples/baby-forest.png",
+                "prompt": "Place the baby/kid in a natural outdoor setting with greenery, sunlight and warm tones. Maintain the real baby’s face details, eyes, expression, skin tone and identity. Ensure the background and lighting feel natural and vibrant.",
+                "alias": "Outdoor Nature Shoot"
+            },
+            {
+                "id": "babyshoot4",
+                "label": "Birthday Theme",
+                "image": "/compositionsamples/baby-birthday.png",
+                "prompt": "Create a birthday-themed baby/kid photoshoot with balloons, decorations and cheerful ambience. Keep the baby’s face, eyes, expression, hair and identity exactly the same. Use bright, colorful lighting while maintaining realism.",
+                "alias": "Birthday Theme"
+            },
+            {
+                "id": "babyshoot5",
+                "label": "Traditional Dress Shoot",
+                "image": "/compositionsamples/baby-temple.png",
+                "prompt": "Dress the baby/kid in traditional Indian attire and create a warm cultural photoshoot setting. Make sure the baby’s facial features, eyes, skin tone, expression and identity remain unchanged. Enhance colors and details naturally.",
+                "alias": "Traditional Dress Shoot"
+            }
+        ]
+    },
+    {
+        "id": "Passport_Stamp_Photos",
+        "label": "Passport & Stamp Size Photos",
+        "items": [
+            {
+                "id": "ps1",
+                "label": "Passport White BG",
+                "image": "/compositionsamples/ps1.png",
+                "prompt": "Generate a passport-size photo from the given image with a pure white background. Ensure centered head framing, proper lighting, and clean edges. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Passport White BG"
+            },
+            {
+                "id": "ps2",
+                "label": "Passport Light Blue BG",
+                "image": "/compositionsamples/ps2.png",
+                "prompt": "Generate a passport-size photo with a soft light-blue background. Maintain the real identity, skin tone, face structure, eyes, eyebrows, expression and hair exactly as in the original image.",
+                "alias": "Passport Light Blue BG"
+            },
+            {
+                "id": "ps3",
+                "label": "Passport Studio Look",
+                "image": "/compositionsamples/ps3.png",
+                "prompt": "Create a studio-style passport photo with even lighting, smooth background and sharp clarity. Use white or off-white background. Do not change any facial features, identity, eyes, eyebrows, hair or expression.",
+                "alias": "Passport Studio Look"
+            },
+            {
+                "id": "ps4",
+                "label": "Stamp Size White BG",
+                "image": "/compositionsamples/ps4.png",
+                "prompt": "Generate a stamp-size photo from the given image with a plain white background. Ensure the face remains unchanged with original eyes, eyebrows, facial structure, expression and hair.",
+                "alias": "Stamp Size White BG"
+            },
+            {
+                "id": "ps5",
+                "label": "Stamp Size Light Blue BG",
+                "image": "/compositionsamples/ps5.png",
+                "prompt": "Create a stamp-size photo using a light-blue background. Maintain the real person’s identity and facial details without modifying expression, eyes, nose, lips or hair.",
+                "alias": "Stamp Size Light Blue BG"
+            },
+            {
+                "id": "ps6",
+                "label": "8 Photo Collage White BG",
+                "image": "/compositionsamples/ps6.png",
+                "prompt": "Generate an 8-photo for passport-size photo print collage on a pure white background. All 8 photos must be identical and maintain the original identity, facial structure, eyes, eyebrows, expression and hair.",
+                "alias": "8 Photo Collage White BG"
+            },
+            {
+                "id": "ps7",
+                "label": "8 Photo Collage Light Blue BG",
+                "image": "/compositionsamples/ps7.png",
+                "prompt": "Create an 8-photo for passport size photo print using a light-blue background. Each picture should be identical with no changes in the person's face details, identity, eyes, eyebrows, hair and expression.",
+                "alias": "8 Photo Collage Light Blue BG"
+            },
+            {
+                "id": "ps8",
+                "label": "High Clarity Passport",
+                "image": "/compositionsamples/ps8.png",
+                "prompt": "Generate a high-clarity passport photo with sharp details, even lighting and a white background. Keep the original facial features, skin tone, eyes, nose, eyebrows and expression unchanged.",
+                "alias": "High Clarity Passport"
+            },
+            {
+                "id": "ps9",
+                "label": "Formal Passport Photo",
+                "image": "/compositionsamples/ps9.png",
+                "prompt": "Create a formal passport-style photo with a clean background and balanced lighting. Keep the person’s real identity, facial structure, eyes, eyebrows, expression and hair untouched.",
+                "alias": "Formal Passport Photo"
+            },
+            {
+                "id": "ps10",
+                "label": "Official ID Photo",
+                "image": "/compositionsamples/ps10.png",
+                "prompt": "Generate an official ID-style photo with a plain white or light-blue background. Keep the face, identity, eyes, expression, skin tone and facial structure exactly the same as the given image.",
+                "alias": "Official ID Photo"
+            }
+        ]
+    },
+    {
+        "id": "Face_Cleanup",
+        "label": "Face Cleanup",
+        "items": [
+            {
+                "id": "enhance1",
+                "label": "Clear Skin",
+                "image": "/compositionsamples/enhance1.png",
+                "prompt": "Enhance the given human face by removing dark spots, acne marks and pigmentation. Smoothen the skin naturally without making it artificial. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Clear Skin"
+            },
+            {
+                "id": "enhance2",
+                "label": "Mole Removal",
+                "image": "/compositionsamples/enhance2.png",
+                "prompt": "Retouch the face to remove moles, blemishes and minor skin imperfections while keeping the natural texture intact. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Mole Removal"
+            },
+            {
+                "id": "enhance3",
+                "label": "Wrinkle Reduction",
+                "image": "/compositionsamples/enhance3.png",
+                "prompt": "Reduce wrinkles, fine lines and under-eye creases gently while keeping the person’s identity completely unchanged. Maintain natural skin tone and lighting. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Wrinkle Reduction"
+            },
+            {
+                "id": "enhance4",
+                "label": "Full Face Cleanup",
+                "image": "/compositionsamples/enhance4.png",
+                "prompt": "Perform complete facial cleanup by removing dark circles, dark spots, acne marks, blemishes and wrinkles. Add a soft natural glow without over-smoothing. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "Full Face Cleanup"
+            },
+            {
+                "id": "enhance5",
+                "label": "High Quality Retouch",
+                "image": "/compositionsamples/enhance5.png",
+                "prompt": "Apply high-quality natural beauty retouching. Remove moles, acne, pigmentation and uneven texture while maintaining realistic skin pores. Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "alias": "High Quality Retouch"
+            }
+        ]
+    }
+]

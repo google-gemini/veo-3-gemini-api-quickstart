@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model UserProfile {
+  id        String   @id // This will match Supabase Auth ID
+  email     String   @unique
+  fullName  String?
+  avatarUrl String?
+  credits   Int      @default(100)
+  trialEndsAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  images    Image[]
+  prompts   Prompt[]
+  folders   Folder[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  color     String   @default("blue")
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  images    Image[]
+}
+
+model Prompt {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id])
+  
+  images    Image[]
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String   // Supabase Storage URL
+  createdAt DateTime @default(now())
+  
+  promptId  String?
+  prompt    Prompt?  @relation(fields: [promptId], references: [id])
+  
+  folderId  String?
+  folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id])
+}
