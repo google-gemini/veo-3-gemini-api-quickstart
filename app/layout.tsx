@@ -17,11 +17,18 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Gemini API Studio",
-  description: "A quickstart for the Gemini API with Veo 3",
+  title: "Photoverse",
+  description: "AI-Powered Image & Video Studio",
   icons: {
     icon: "/imgs/gemini_icon.svg",
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({

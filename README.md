@@ -1,6 +1,6 @@
-# Gemini API Veo 3 & Nano Banana Quickstart
+# PhotoAIG - AI-Powered Creative Studio
 
-A NextJs quickstart for creating and editing images and videos using Google's latest Gemini API models including [Veo 3](https://ai.google.dev/gemini-api/docs/video), [Imagen 4](https://ai.google.dev/gemini-api/docs/imagen), and [Gemini 2.5 Flash Image aka nano banana](https://ai.google.dev/gemini-api/docs/image-generations). 
+A professional Next.js application for creating and editing images and videos using Google's latest Gemini API models including [Veo 3](https://ai.google.dev/gemini-api/docs/video), [Imagen 4](https://ai.google.dev/gemini-api/docs/imagen), and [Gemini 2.5 Flash Image](https://ai.google.dev/gemini-api/docs/image-generations).
 
 <table>
   <tr>
@@ -23,106 +23,245 @@ A NextJs quickstart for creating and editing images and videos using Google's la
 </table>
 
 > [!NOTE]
-> If you want a full studio, consider [Google's Flow](https://labs.google/fx/tools/flow) (a professional environment for Veo/Imagen). Use this repo as a lightweight studio to learn how to build your own UI that generates content with Google's AI models via the Gemini API.
+> If you want a full studio, consider [Google's Flow](https://labs.google/fx/tools/flow). Use this repo as a production-ready template to build your own AI creative platform with authentication, billing, and custom branding.
 
 (This is not an official Google product.)
 
-## Features
+## ✨ Features
 
-The quickstart provides a unified composer UI with different modes for content creation:
+### 🎨 Creative Tools
 
--   **Create Image**: Generate images from text prompts using **Imagen 4** or **Gemini 2.5 Flash Image**.
--   **Edit Image**: Edit an image based on a text prompt using **Gemini 2.5 Flash Image**.
--   **Compose Image**: Combine multiple images with a text prompt to create a new image using **Gemini 2.5 Flash Image**.
--   **Create Video**: Generate videos from text prompts or an initial image using **Veo 3**.
+-   **Create Image**: Generate images from text prompts using **Imagen 4** or **Gemini 2.5 Flash Image**
+-   **Edit Image**: Edit images based on text prompts using **Gemini 2.5 Flash Image**
+-   **Compose Image**: Combine multiple images with advanced composition controls
+-   **Compose Album**: Generate multiple themed variations from a single reference image
+-   **Create Video**: Generate videos from text prompts or images using **Veo 3**
 
-### Quick Actions & UI Features
-- Seamless navigation between modes after generating content
-- Download generated images & videos
-- Cut videos directly in the browser to specific time ranges
+### 🚀 Advanced Features
 
+-   **AI Prompt Enhancement**: Automatically improve prompts using Gemini for better results
+-   **Smart Inspiration Library**: Browse categorized prompt templates with instant preview
+-   **Composition Controls**: Fine-tune layouts, styles, vibes, and advanced features
+-   **Character Consistency**: Maintain character features across generations
+-   **Text Integration**: Add text overlays to generated images
+-   **User Authentication**: Supabase-based auth with Google OAuth
+-   **Credit System**: Built-in credit management with Stripe integration
+-   **History & Organization**: Save generations to folders with full history tracking
+-   **Video Trimming**: Cut videos directly in the browser
+-   **Download & Share**: Export all generated content
 
-## Getting Started: Development and Local Testing
+## 🛠️ Tech Stack
 
-Follow these steps to get the application running locally for development and testing.
+-   **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+-   **UI**: [React 19](https://reactjs.org/) + [Tailwind CSS](https://tailwindcss.com/)
+-   **Database**: [Prisma](https://www.prisma.io/) with PostgreSQL (Supabase)
+-   **Authentication**: [Supabase Auth](https://supabase.com/auth)
+-   **Payments**: [Stripe](https://stripe.com/)
+-   **AI Models**: 
+  - **Veo 3** - Video generation
+  - **Imagen 4** - High-quality image generation
+  - **Gemini 2.5 Flash** - Fast image generation, editing, and composition
+-   **Deployment**: Docker + Google Cloud Run
 
-**1. Prerequisites:**
+## 🚀 Quick Start
 
--   Node.js and npm (or yarn/pnpm)
--   **`GEMINI_API_KEY`**: The application requires a [GEMINI API key](https://aistudio.google.com/app/apikey). Either create a `.env` file in the project root and add your API key: `GEMINI_API_KEY="YOUR_API_KEY"` or set the environment variable in your system.
+### Prerequisites
+
+-   Node.js 20+ and npm
+-   [Gemini API Key](https://aistudio.google.com/app/apikey) (Paid tier required)
+-   Supabase account for auth and database
+-   Stripe account for payments (optional)
 
 > [!WARNING]  
-> Google Veo 3, Imagen 4, and Gemini 2.5 Flash Image are part of the Gemini API Paid tier. You will need to be on the paid tier to use these models.
+> Veo 3, Imagen 4, and Gemini 2.5 Flash Image require the Gemini API Paid tier.
 
-**2. Install Dependencies:**
+### Local Development
 
-```bash
-npm install
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd PhotoAIG
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env` file:
+   ```bash
+   # Gemini API
+   GEMINI_API_KEY=your_gemini_api_key
+
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   DATABASE_URL=your_supabase_connection_string
+
+   # Stripe (optional)
+   STRIPE_SECRET_KEY=your_stripe_secret_key
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+   STRIPE_WEBHOOK_SECRET=your_webhook_secret
+   ```
+
+4. **Set up the database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+PhotoAIG/
+├── app/
+│   ├── page.tsx                 # Main studio interface
+│   ├── login/                   # Authentication page
+│   └── api/                     # API routes
+│       ├── gemini/              # Gemini image operations
+│       │   ├── generate/        # Image generation
+│       │   ├── edit/            # Image editing
+│       │   └── enhance/         # Prompt enhancement
+│       ├── imagen/generate/     # Imagen 4 generation
+│       ├── veo/                 # Veo 3 video operations
+│       ├── user/                # User data endpoints
+│       └── stripe/              # Payment processing
+├── components/
+│   ├── ui/                      # UI components
+│   │   ├── Composer.tsx         # Main composer interface
+│   │   ├── ModelSelector.tsx   # Model selection
+│   │   ├── ImageComposerControls.tsx
+│   │   ├── AlbumComposerControls.tsx
+│   │   ├── PricingModal.tsx    # Credit purchase UI
+│   │   └── PromptLibrary.tsx   # Inspiration templates
+│   └── auth/
+│       └── LoginButton.tsx      # Auth UI component
+├── lib/
+│   ├── prisma.ts               # Database client
+│   └── supabase.ts             # Supabase client
+├── prisma/
+│   └── schema.prisma           # Database schema
+└── public/
+    ├── prompt.json             # Inspiration library data
+    └── samples/                # Sample images
 ```
 
-**3. Run Development Server:**
+## 🎯 Key Features Explained
+
+### Prompt Enhancement
+
+Uses Gemini to automatically improve user prompts:
+- Analyzes user intent and context
+- Adds technical details for better results
+- Maintains creative direction
+- Works for both image and album generation
+
+### Inspiration Library
+
+Organized prompt templates by category:
+- **Compositions**: Layouts and arrangements
+- **Styles**: Artistic styles and techniques
+- **Vibes**: Moods and atmospheres
+- Searchable and filterable
+- One-click application
+
+### Credit System
+
+- Tracks usage per generation
+- Different costs per model
+- Stripe integration for purchases
+- Real-time credit display
+
+### History & Organization
+
+- Automatic saving of all generations
+- Folder organization
+- Preview and download
+- Full metadata tracking
+
+## 📚 Documentation
+
+- **[DEPLOY.md](./DEPLOY.md)**: Complete deployment guide for Cloud Run
+- **[STRIPE_SETUP.md](./STRIPE_SETUP.md)**: Stripe integration setup
+- **[PRICING.md](./PRICING.md)**: Credit pricing structure
+
+## 🔧 Configuration
+
+### Database Schema
+
+The app uses Prisma with the following models:
+- `UserProfile`: User accounts and credits
+- `Folder`: Image organization
+- `Prompt`: Saved prompts
+- `Image`: Generated images with metadata
+
+### API Routes
+
+#### Image Generation
+- `/api/imagen/generate` - Imagen 4 generation
+- `/api/gemini/generate` - Gemini Flash generation
+- `/api/gemini/edit` - Image editing/composition
+- `/api/gemini/enhance` - Prompt enhancement
+
+#### Video Generation
+- `/api/veo/generate` - Start video generation
+- `/api/veo/operation` - Check generation status
+- `/api/veo/download` - Download completed videos
+
+#### User & Billing
+- `/api/user/credits` - Credit balance
+- `/api/user/history` - Generation history
+- `/api/user/folders` - Folder management
+- `/api/stripe/checkout` - Create payment session
+- `/api/stripe/webhook` - Handle payment events
+
+## 🚢 Deployment
+
+### Docker Build
 
 ```bash
-npm run dev
+docker build \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL="your_url" \
+  --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY="your_key" \
+  -t photoaig .
 ```
 
-Open your browser and navigate to `http://localhost:3000` to see the application.
+### Google Cloud Run
 
-## Project Structure
+See [DEPLOY.md](./DEPLOY.md) for complete deployment instructions including:
+- Google Cloud setup
+- GitHub Actions CI/CD
+- Custom domain mapping
+- Environment configuration
 
-The project is a standard Next.js application with the following key directories:
+## 🤝 Contributing
 
--   `app/`: Contains the main application logic and pages
-    -   `page.tsx`: Main page with the unified composer UI.
-    -   `api/`: API routes for different operations
-        -   `imagen/generate/`: Image generation with Imagen 4
-        -   `gemini/generate/`: Image generation with Gemini 2.5 Flash Image
-        -   `gemini/edit/`: Image editing/composition with Gemini 2.5 Flash Image
-        -   `veo/generate/`: Video generation operations
-        -   `veo/operation/`: Check video generation status
-        -   `veo/download/`: Download generated videos
--   `components/`: Reusable React components
-    -   `ui/Composer.tsx`: The main unified composer for all interactions.
-    -   `ui/VideoPlayer.tsx`: Video player with trimming
-    -   `ui/ModelSelector.tsx`: Model selection component
-    -   `ui/dropzone.tsx`: Drag-and-drop component for file uploads.
--   `lib/`: Utility functions and schema definitions
--   `public/`: Static assets
+Contributions are welcome! Please open an issue to discuss proposed changes.
 
-## Official Docs and Resources
-
--   Gemini API docs: `https://ai.google.dev/gemini-api/docs`
--   Veo 3 Guide: `https://ai.google.dev/gemini-api/docs/video?example=dialogue`
--   Imagen 4 Guide: `https://ai.google.dev/gemini-api/docs/imagen`
-
-## How it Works
-
-The application uses the following API routes to interact with the Google models:
-
-### Image APIs
--   `app/api/imagen/generate/route.ts`: Handles image generation requests with Imagen 4
--   `app/api/gemini/generate/route.ts`: Handles image generation requests with Gemini 2.5 Flash Image
--   `app/api/gemini/edit/route.ts`: Handles image editing and composition with Gemini 2.5 Flash (supports multiple images)
-
-### Video APIs
--   `app/api/veo/generate/route.ts`: Handles video generation requests with Veo 3
--   `app/api/veo/operation/route.ts`: Checks the status of video generation operations
--   `app/api/veo/download/route.ts`: Downloads generated videos
-
-## Technologies Used
-
--   [Next.js](https://nextjs.org/) - React framework for building the user interface
--   [React](https://reactjs.org/) - JavaScript library for building user interfaces
--   [Tailwind CSS](https://tailwindcss.com/) - For styling
--   [Gemini API](https://ai.google.dev/gemini-api/docs) with:
-  - **Veo 3** - For video generation
-  - **Imagen 4** - For high-quality image generation
-  - **Gemini 2.5 Flash** - For fast image generation, editing, and composition
-
-## Questions and feature requests
-
--   **Want a feature?** Please open an issue describing the use case and proposed behavior.
-
-## License
+## 📄 License
 
 This project is licensed under the Apache License 2.0.
+
+## 🔗 Resources
+
+-   [Gemini API Docs](https://ai.google.dev/gemini-api/docs)
+-   [Veo 3 Guide](https://ai.google.dev/gemini-api/docs/video)
+-   [Imagen 4 Guide](https://ai.google.dev/gemini-api/docs/imagen)
+-   [Supabase Docs](https://supabase.com/docs)
+-   [Stripe Docs](https://stripe.com/docs)
+
+## ⚠️ Important Notes
+
+- **API Costs**: Veo 3, Imagen 4, and Gemini 2.5 Flash are paid APIs
+- **Resource Limits**: Be aware of rate limits and quotas
+- **Production**: Configure proper error handling and monitoring
+- **Security**: Never expose API keys in client-side code

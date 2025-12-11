@@ -5,6 +5,7 @@ type StudioMode =
   | "create-image"
   | "edit-image"
   | "compose-image"
+  | "compose-album"
   | "create-video";
 
 interface ModelSelectorProps {
@@ -27,7 +28,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       ];
     } else {
       // For image modes
-      return ["gemini-2.5-flash-image-preview", "imagen-4.0-fast-generate-001"];
+      return ["gemini-2.5-flash-image-preview", "gemini-3-pro-image-preview", "imagen-4.0-fast-generate-001"];
     }
   };
 
@@ -37,6 +38,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     if (model.includes("veo-3.0-fast")) return "Veo 3 - Fast";
     if (model.includes("veo-3.0")) return "Veo 3";
     if (model.includes("veo-2.0")) return "Veo 2";
+    if (model.includes("gemini-3-pro-image-preview")) return "Nano Banana Pro";
     if (model.includes("gemini-2.5")) return "Gemini 2.5 Flash";
     if (model.includes("imagen-4.0")) return "Imagen 4.0 Fast";
     return model;

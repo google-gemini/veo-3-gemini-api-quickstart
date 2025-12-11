@@ -20,9 +20,31 @@ export async function POST(req: Request) {
 
     const form = await req.formData();
     const prompt = (form.get("prompt") as string) || "";
+    const model = (form.get("model") as string) || "gemini-2.5-flash-image-preview";
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
+    }
+
+    // Check credits
+    const { createClient } = await import('@/lib/supabase/server')
+    const { prisma } = await import('@/lib/prisma')
+
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const profile = await prisma.userProfile.findUnique({
+      where: { id: user.id }
+    })
+
+    const cost = model.includes("gemini-3-pro") ? 3 : 1;
+
+    if (!profile || profile.credits < cost) {
+      return NextResponse.json({ error: `Insufficient credits. Required: ${cost}, Available: ${profile?.credits || 0}` }, { status: 403 })
     }
 
     // Handle multiple image files
@@ -105,9 +127,19 @@ export async function POST(req: Request) {
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-image-preview",
-      contents: contents,
+      model: model,
+      contents: [
+        {
+          parts: contents
+        }
+      ],
     });
+
+    // Deduct credit on success
+    await prisma.userProfile.update({
+      where: { id: user.id },
+      data: { credits: { decrement: cost } }
+    })
 
     // Process the response to extract the image
     let imageData = null;
@@ -136,8 +168,11 @@ export async function POST(req: Request) {
         mimeType: responseMimeType,
       },
     });
-  } catch (error) {
-    console.error("Error editing image with Gemini:", error);
+  } catch (error: unknown) {
+    console.error("Error editing image with Gemini:", error instanceof Error ? error.message : String(error));
+    if (error && typeof error === 'object' && 'response' in error) {
+      console.error("Gemini API Error Response:", JSON.stringify(error.response, null, 2));
+    }
     return NextResponse.json(
       { error: "Failed to edit image" },
       { status: 500 }
