@@ -7,21 +7,21 @@
                 "id": "sample1",
                 "label": "Walking hand in hand",
                 "image": "/compositionsamples/sample1.png",
-                "prompt": " walking hand in hand along a beach at sunset, waves gently lapping, bride’s veil trailing in wind, candid joyful moment, wide shot, romantic ambience",
+                "prompt": " walking hand in hand along a beach at sunset, waves gently lapping, bride’s veil trailing in wind, candid joyful moment, wide shot, romantic ambience. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
                 "alias": "Walking hand in hand"
             },
             {
                 "id": "sample2",
                 "label": "Sitting on staircase",
                 "image": "/compositionsamples/sample2.png",
-                "prompt": " sitting on elegant white marble staircase with groom beside her leaning in, natural light from window, soft shadows, intimate and artistic, editorial style",
+                "prompt": " sitting on elegant white marble staircase with groom beside her leaning in, natural light from window, soft shadows, intimate and artistic, editorial style. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
                 "alias": "Sitting on staircase"
             },
             {
                 "id": "sample3",
                 "label": "Ancient Tamil",
                 "image": "/compositionsamples/sample3.png",
-                "prompt": "Dress them like Ancient Tamil kingdom sitting in throne.  Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.",
+                "prompt": "Dress them like Ancient Tamil kingdom sitting in throne.  Make sure no changes in the face details, structure, eyes, eye brow, fore head, hair and expression of real persons.Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
                 "alias": "Ancient Tamil"
             },
             {
@@ -98,7 +98,7 @@
                 "id": "sample9",
                 "label": "Ghibli Flower Field",
                 "image": "/compositionsamples/album_ghibli_sample.png",
-                "prompt": " sitting in a vast Ghibli-style flower field, gentle wind moving petals, soft pastel colors, warm lighting like Howl and Sophie’s meadow. Preserve the exact identity of the real people in the source image.",
+                "prompt": " sitting in a vast Ghibli-style flower field, gentle wind moving petals, soft pastel colors, warm lighting like Howl and Sophie’s meadow. Preserve the exact identity of the real people in the source image. Do not change or modify their face details, facial structure, skin tone, eyes, eyebrows, forehead, nose, lips, hair, expressions, or any unique features. Only change the background, clothing, and environment while keeping their real appearance 100% intact.",
                 "alias": "Ghibli Flower Field"
             }
         ]
